@@ -1,0 +1,48 @@
+# A linha 'version' foi removida para corrigir o aviso
+services:
+  # 1. Serviço do Banco de Dados (MySQL)
+  db:
+    image: mysql:8.0
+    command: [--default-authentication-plugin=mysql_native_password]
+    restart: always
+    environment:
+      MYSQL_DATABASE: db_troca_livros
+      MYSQL_ROOT_PASSWORD: seu-password-super-secreto # <-- TROQUE ISSO
+    ports:
+      - "3307:3306" # Mapeia a porta 3307 do PC para a 3306 do contêiner
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # --- A MÁGICA ACONTECE AQUI ---
+      # Monta seu script SQL para a pasta de inicialização do MySQL
+      - ./back/Projeto-Livraria-backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # 2. Serviço do Backend (sua API)
+  backend:
+    build:
+      context: ./back/Projeto-Livraria-backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: seu-password-super-secreto # <-- USE A MESMA SENHA DE CIMA
+      DB_NAME: db_troca_livros
+      DB_PORT: 3306
+    depends_on:
+      - db
+
+  # 3. Serviço do Frontend (seu React)
+  frontend:
+    build:
+      context: ./front/Projeto-Livraria-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+# 4. Define o volume que o serviço 'db' vai usar
+volumes:
+  mysql-data:
