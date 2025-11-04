@@ -1,0 +1,143 @@
+/* src/styles/MatchItem.css */
+
+.match-item-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.match-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+.user-name {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: #343a40;
+}
+
+.user-location {
+  font-size: 0.9em;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.user-stats {
+  display: flex;
+  align-items: center;
+  font-size: 0.85em;
+  color: #ffc107;
+}
+
+.user-stats span {
+  color: #6c757d;
+  margin-left: 5px;
+}
+
+.star-filled {
+  font-size: 0.9em;
+  color: #ffc107;
+}
+
+/* Porcentagem de Match (Canto Superior Direito) */
+.match-percentage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: white;
+}
+
+/* Detalhes do Livro (Parte Inferior) */
+.book-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto; /* Oferece, Quer, Botão */
+  gap: 1.5rem;
+  padding-top: 1rem;
+  align-items: center;
+}
+
+.book-offer,
+.book-want {
+  border-right: 1px solid #f0f0f0;
+  padding-right: 1.5rem;
+}
+
+.book-want {
+  border-right: none; /* Remove a borda da última coluna de detalhes */
+  padding-right: 0;
+  padding-left: 1.5rem;
+  border-left: 1px solid #f0f0f0;
+}
+
+.offer-title,
+.want-title {
+  font-size: 0.85em;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.book-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.book-image {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.book-card p {
+  font-weight: 600;
+  color: #495057;
+  margin: 0;
+  font-size: 0.95em;
+}
+
+/* Botão de Iniciar Troca */
+.init-trade-button {
+  background-color: #28a745; /* Verde */
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap; /* Impede a quebra de linha */
+  align-self: center; /* Alinha o botão verticalmente ao centro */
+}
+
+.init-trade-button:hover {
+  background-color: #1e7e34;
+}

@@ -1,0 +1,107 @@
+/* src/styles/NotificationPopup.css */
+
+.notification-bell-wrapper {
+  position: relative; /* Para posicionar o badge e o popup */
+  display: flex; /* Para alinhar o ícone e o badge */
+  align-items: center;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px; /* Ajuste a posição vertical */
+  right: -8px; /* Ajuste a posição horizontal */
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 1px 5px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  line-height: 1;
+  min-width: 16px; /* Largura mínima */
+  text-align: center;
+  z-index: 1;
+}
+
+.notification-popup {
+  position: absolute;
+  top: 100%; /* Posiciona abaixo do ícone */
+  right: 0; /* Alinha à direita do wrapper */
+  margin-top: 10px; /* Espaço entre o ícone e o popup */
+  width: 320px; /* Largura do popup */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  z-index: 1050; /* Garante que fique acima de outros elementos */
+  overflow: hidden; /* Para cantos arredondados funcionarem com a lista */
+}
+
+.notification-popup-header {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+.notification-popup-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 400px; /* Altura máxima com scroll */
+  overflow-y: auto;
+}
+
+.notification-list li {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notification-list li:last-child {
+  border-bottom: none;
+}
+
+.notification-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.notification-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sender-name {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px; /* Espaço antes do timestamp */
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #888;
+  white-space: nowrap; /* Impede que quebre linha */
+}
+
+.no-notifications {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  padding: 20px 15px !important; /* !important para sobrescrever padding do li */
+  cursor: default !important; /* Não é clicável */
+  background-color: white !important; /* Sem hover */
+}

@@ -1,0 +1,174 @@
+/* src/styles/Navbar.css */
+
+/* ================== ESTILOS ORIGINAIS DA BARRA DE NAVEGAÇÃO ================== */
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff; /* Fundo branco limpo */
+  border-bottom: 1px solid #f0f0f0; /* Linha sutil abaixo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* ================== LOGO ================== */
+.navbar-logo a {
+  font-size: 1.5rem;
+  font-weight: 900; /* Forte */
+  color: #333;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+/* TrocaHQ com destaque (simulado com cor forte) */
+.navbar-logo a:first-child {
+  color: #007bff; /* Cor de destaque, ajuste para sua cor de logo */
+}
+
+/* ================== LINKS PRINCIPAIS ================== */
+.navbar-links-main {
+  display: flex;
+  flex-grow: 1; /* Permite que ocupe o espaço central */
+  justify-content: center;
+  gap: 2rem;
+}
+
+.nav-link-item {
+  text-decoration: none;
+  color: #6c757d; /* Cinza sutil para links normais */
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+
+.nav-link-item:hover {
+  color: #343a40; /* Cor mais escura no hover */
+}
+
+/* ================== AÇÕES E PERFIL DO USUÁRIO ================== */
+.navbar-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Ícones de Notificação e Busca */
+.action-icons {
+  display: flex;
+  gap: 1rem;
+  color: #6c757d;
+}
+
+.action-icon {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.action-icon:hover {
+  color: #343a40;
+}
+
+/* Perfil do Usuário */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid #e9ecef; /* Separador sutil */
+}
+
+.user-avatar-small {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+}
+
+.user-name-label {
+  font-weight: 600;
+  color: #343a40;
+  font-size: 0.95rem;
+}
+
+
+/* ================== DROPDOWN DO USUÁRIO (NOVOS ESTILOS) ================== */
+
+/* Novo container para o menu, necessário para o posicionamento */
+.user-menu {
+  position: relative;
+}
+
+/* Deixamos sua classe .user-profile interativa */
+.user-profile {
+  cursor: pointer;
+  border-radius: 8px;
+  padding-right: 0.5rem; /* Espaço para a seta */
+  transition: background-color 0.2s ease;
+}
+
+.user-profile:hover {
+  background-color: #f0f0f0;
+}
+
+/* Estilo e animação da seta */
+.arrow-icon {
+  margin-left: 8px; /* Espaço entre o nome e a seta */
+  font-size: 0.8em;
+  color: #555;
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon.open {
+  transform: rotate(180deg); /* Gira a seta quando o menu está aberto */
+}
+
+/* O menu dropdown que aparece/desaparece */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px); /* Posiciona abaixo do nome com 10px de espaço */
+  right: 0;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+  width: 200px; /* Largura do menu */
+  z-index: 1000; /* Garante que fique sobre outros elementos */
+  overflow: hidden;
+}
+
+.dropdown-menu li a,
+.dropdown-menu li .logout-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem; /* Mesmo tamanho da fonte do nome */
+  font-family: inherit; /* Herda a fonte do restante do site */
+}
+
+.dropdown-menu li a:hover,
+.dropdown-menu li .logout-button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Linha separadora (opcional) */
+.dropdown-menu .separator {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 8px 0;
+  padding: 0;
+}
+
+.logout-button {
+  color: #d9534f; /* Cor vermelha para dar destaque à ação de sair */
+}

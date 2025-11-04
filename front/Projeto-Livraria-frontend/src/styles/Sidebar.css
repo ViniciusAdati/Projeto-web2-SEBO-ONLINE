@@ -1,0 +1,157 @@
+/* ==================================== */
+/* ESTILOS GERAIS DA SIDEBAR (Blocos)   */
+/* ==================================== */
+
+.sidebar-block h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* ==================================== */
+/* QUICK ACTIONS (Ações Rápidas)        */
+/* ==================================== */
+
+.quick-actions .action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  gap: 0.5rem;
+}
+
+.quick-actions .action-button svg {
+  font-size: 1.1em;
+}
+
+.action-button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.action-button.primary:hover {
+  background-color: #0056b3;
+}
+
+.action-button.secondary {
+  background-color: #e9ecef;
+  color: #007bff;
+}
+
+.action-button.secondary:hover {
+  background-color: #dae0e5;
+}
+
+.action-button.tertiary {
+  background-color: #fff;
+  color: #6c757d;
+  border: 1px solid #ced4da;
+}
+
+.action-button.tertiary:hover {
+  background-color: #f8f9fa;
+}
+
+/* ==================================== */
+/* RECENT ACTIVITY (Atividade Recente)  */
+/* ==================================== */
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.activity-item svg {
+  font-size: 1.2em;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.activity-item p {
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.activity-item span {
+  font-size: 0.85em;
+  color: #6c757d;
+}
+
+.activity-item.success svg {
+  color: #28a745;
+}
+
+.activity-item.info svg {
+  color: #17a2b8;
+}
+
+.activity-item.warning svg {
+  color: #ffc107;
+}
+
+/* ==================================== */
+/* TOP TRADERS (Top Traders)            */
+/* ==================================== */
+
+.trader-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.trader-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.trader-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.trader-info {
+  flex-grow: 1;
+}
+
+.trader-name {
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.trader-trades {
+  font-size: 0.85em;
+  color: #6c757d;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2px;
+  font-size: 0.9em;
+  color: #ffc107;
+}
+
+.star.empty {
+  color: #e9ecef;
+}

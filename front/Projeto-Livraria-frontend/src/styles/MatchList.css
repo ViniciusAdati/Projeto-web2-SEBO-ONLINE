@@ -1,0 +1,38 @@
+/* src/styles/MatchList.css */
+
+.match-list-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem 1.5rem 0; /* Padding no topo e lados, sem padding embaixo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.match-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.match-list-header h3 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 0;
+  color: #343a40;
+}
+
+.relevance-filter {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.match-items {
+  /* O container que segura os MatchItem cards */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

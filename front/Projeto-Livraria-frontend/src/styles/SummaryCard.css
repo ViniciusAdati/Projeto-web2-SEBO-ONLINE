@@ -1,0 +1,43 @@
+/* src/styles/SummaryCard.css */
+
+.summary-card {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.summary-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 0.9em;
+  color: #6c757d;
+  font-weight: 500;
+  margin: 0;
+}
+
+.card-icon {
+  font-size: 1.5em;
+  color: #007bff; /* Cor principal, ajuste se quiser cores diferentes para cada card */
+}
+
+.card-value {
+  font-size: 2.2em;
+  font-weight: 800;
+  color: #343a40;
+  margin: 0;
+}

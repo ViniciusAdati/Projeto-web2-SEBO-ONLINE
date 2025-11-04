@@ -1,0 +1,173 @@
+import { pool } from "../config/database";
+import { RowDataPacket } from "mysql2";
+
+interface BookInputData {
+  googleBookId: string;
+  title: string;
+  author: string;
+  imageUrl: string;
+  condition: string;
+  tradeValue: number;
+  description: string;
+}
+
+export const addBookToInventory = async (
+  userId: number,
+  bookData: BookInputData
+) => {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const bookSql = `
+      INSERT INTO livros (google_book_id, titulo, autor, url_capa, descricao_geral) 
+      VALUES (?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE 
+        titulo = VALUES(titulo), autor = VALUES(autor), url_capa = VALUES(url_capa), id = LAST_INSERT_ID(id); 
+    `;
+    const [bookResult]: any = await connection.execute(bookSql, [
+      bookData.googleBookId,
+      bookData.title,
+      bookData.author,
+      bookData.imageUrl,
+      bookData.description || null,
+    ]);
+
+    let livroId = bookResult.insertId;
+    if (livroId === 0 && bookData.googleBookId) {
+      const [rows] = await connection.execute<RowDataPacket[]>(
+        "SELECT id FROM livros WHERE google_book_id = ?",
+        [bookData.googleBookId]
+      );
+      if (rows.length > 0) {
+        livroId = rows[0].id;
+      } else {
+        throw new Error(
+          "Não foi possível encontrar o livro na tabela 'livros' após a inserção/atualização."
+        );
+      }
+    }
+    if (!livroId) {
+      throw new Error(
+        "ID do livro inválido após a operação na tabela 'livros'."
+      );
+    }
+
+    const inventorySql = `
+      INSERT INTO inventario (usuario_id, livro_id, estado_conservacao, valor_troca, descricao_usuario) 
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    await connection.execute(inventorySql, [
+      userId,
+      livroId,
+      bookData.condition,
+      bookData.tradeValue,
+      bookData.description,
+    ]);
+
+    await connection.commit();
+    console.log(
+      `[InventoryService] Livro (ID: ${livroId}) adicionado ao inventário do usuário (ID: ${userId})`
+    );
+    return { success: true, message: "Livro adicionado ao inventário." };
+  } catch (error: any) {
+    // --- CORREÇÃO AQUI (adicionado : any) ---
+    await connection.rollback();
+    console.error("[InventoryService] Erro ao adicionar livro:", error);
+    // Agora podemos acessar error.message com segurança
+    throw new Error(
+      `Falha ao salvar o livro no banco de dados: ${error.message || error}`
+    );
+  } finally {
+    connection.release();
+  }
+};
+
+// ... (resto do arquivo - deleteBookFromInventory, getRecentBooks, getBooksByUserId - continua igual)
+export const deleteBookFromInventory = async (
+  userId: number,
+  inventoryId: number
+) => {
+  try {
+    const sql = `
+      DELETE FROM inventario 
+      WHERE id = ? AND usuario_id = ?;
+    `;
+
+    const [result]: any = await pool.execute(sql, [inventoryId, userId]);
+
+    if (result.affectedRows > 0) {
+      return { success: true, message: "Item removido com sucesso." };
+    } else {
+      throw new Error(
+        "Item não encontrado ou usuário não autorizado para deletar este item."
+      );
+    }
+  } catch (error: any) {
+    console.error(
+      "[InventoryService] Erro ao deletar item do inventário:",
+      error
+    );
+    throw new Error(error.message || "Falha ao deletar o item.");
+  }
+};
+
+export const getRecentBooks = async () => {
+  try {
+    const sql = `
+      SELECT
+        inv.id as inventario_id,
+        inv.valor_troca,
+        inv.estado_conservacao,
+        inv.descricao_usuario,
+        l.titulo,
+        l.autor,
+        l.url_capa,
+        u.nome as nome_usuario
+      FROM inventario AS inv 
+      JOIN livros AS l ON inv.livro_id = l.id 
+      JOIN usuarios AS u ON inv.usuario_id = u.id 
+      WHERE inv.disponivel_para_troca = true
+      ORDER BY inv.data_adicao DESC
+      LIMIT 10;
+    `;
+    const [rows] = await pool.execute(sql);
+    return rows;
+  } catch (error) {
+    console.error(
+      "[InventoryService] Erro ao buscar inventário recente:",
+      error
+    );
+    throw new Error("Falha ao buscar livros recentes.");
+  }
+};
+
+export const getBooksByUserId = async (userId: number) => {
+  try {
+    const sql = `
+      SELECT
+        inv.id as inventario_id,
+        inv.valor_troca,
+        inv.estado_conservacao,
+        inv.descricao_usuario,
+        l.titulo,
+        l.autor,
+        l.url_capa,
+        u.nome as nome_usuario
+      FROM inventario AS inv 
+      JOIN livros AS l ON inv.livro_id = l.id 
+      JOIN usuarios AS u ON inv.usuario_id = u.id 
+      WHERE inv.usuario_id = ?
+      ORDER BY inv.data_adicao DESC;
+    `;
+    const [rows] = await pool.execute(sql, [userId]);
+    return rows;
+  } catch (error) {
+    console.error(
+      "[InventoryService] Erro ao buscar inventário do usuário:",
+      error
+    );
+    throw new Error("Falha ao buscar livros deste usuário.");
+  }
+};
