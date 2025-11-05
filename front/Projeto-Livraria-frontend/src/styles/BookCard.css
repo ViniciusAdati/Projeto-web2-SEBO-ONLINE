@@ -125,3 +125,11 @@
 .book-card .auth-button:hover {
   background-color: #0056b3;
 }
+.book-card {
+  /* ... (todos os seus estilos existentes) ... */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer; /* <-- ADICIONE ESTA LINHA */
+}

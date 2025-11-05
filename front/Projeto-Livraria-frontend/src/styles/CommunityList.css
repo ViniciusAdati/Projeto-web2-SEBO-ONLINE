@@ -1,43 +1,77 @@
-.list-wrapper {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
+/* src/styles/CommunityList.css */
+/* Este é o estilo que imita o "Top Traders" */
 
-.user-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
-}
-
-.user-card {
+.top-traders-list { /* Vamos reutilizar esta classe como container */
   background-color: #ffffff;
-  border: 1px solid #eee;
   border-radius: 8px;
   padding: 1.5rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.user-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+.top-traders-list h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
 }
 
-.user-name {
-  font-size: 1.1rem;
+.top-traders-list ul {
+  list-style: none; /* Remove o ponto de lista (•) */
+  padding: 0;
+  margin: 0;
+}
+
+.top-traders-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.top-traders-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Ícone de usuário (placeholder) */
+.trader-avatar-placeholder { 
+  width: 35px;
+  height: 35px;
+  min-width: 35px; /* Evita encolhimento */
+  border-radius: 50%;
+  color: #ccc;
+  background-color: #f0f0f0;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Informações (Nome e Livros) */
+.trader-info {
+  flex-grow: 1; /* Ocupa o espaço */
+  line-height: 1.4;
+  /* Remove o destaque azul ao selecionar texto */
+  user-select: none; 
+}
+
+.trader-name {
+  display: block;
   font-weight: 600;
   color: #333;
-  margin-top: 0.75rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
 }
 
-.user-join-date {
+/* Classe para "X livros" */
+.trader-trades { 
+  display: block;
   font-size: 0.85rem;
   color: #777;
 }
-.user-card-link {
-  text-decoration: none;
-  color: inherit;
+
+/* Mensagem de lista vazia */
+.community-list-empty {
+  text-align: center;
+  padding: 10px;
+  color: #888;
+  font-style: italic;
 }

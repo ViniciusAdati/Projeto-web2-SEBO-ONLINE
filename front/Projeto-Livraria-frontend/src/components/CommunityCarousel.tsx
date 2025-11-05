@@ -1,11 +1,16 @@
+// src/components/CommunityCarousel.tsx
+
+// --- CORREÇÃO 1: 'React' foi removido ---
 import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import "../styles/CommunityCarousel.css";
+import "./CommunityCarousel.css"; // Este é o CSS que tem o estilo "bonitinho"
 
-import { getRecentBooks } from "../services/inventoryService";
-
+// --- CORREÇÃO 2: Importa o 'api' (axios) ---
+import api from "../services/api";
+// Importa o TIPO (interface) que o 'api.get' vai retornar
 import type { IBookInventory } from "../services/inventoryService";
+// A importação 'getRecentBooks' foi REMOVIDA
 
 export function CommunityCarousel() {
   const [books, setBooks] = useState<IBookInventory[]>([]);
@@ -17,8 +22,10 @@ export function CommunityCarousel() {
       try {
         setLoading(true);
         setError(null);
-        const data = await getRecentBooks();
-        setBooks(data);
+        // --- CORREÇÃO 3: Chama a API via axios ---
+        // Usamos a rota /api/inventory/recent que já existe no seu backend
+        const response = await api.get<IBookInventory[]>("/inventory/recent");
+        setBooks(response.data);
       } catch (err: any) {
         setError(err.message || "Erro ao carregar livros.");
       } finally {
@@ -32,7 +39,7 @@ export function CommunityCarousel() {
   if (loading) {
     return (
       <div className="carousel-wrapper">
-        <h2 className="carousel-title">Livro</h2>
+        <h2 className="carousel-title">HQs</h2>
         <p style={{ textAlign: "center", padding: "2rem" }}>
           Carregando livros da comunidade...
         </p>
@@ -43,7 +50,7 @@ export function CommunityCarousel() {
   if (error) {
     return (
       <div className="carousel-wrapper">
-        <h2 className="carousel-title">Livro</h2>
+        <h2 className="carousel-title">HQs</h2>
         <p style={{ textAlign: "center", padding: "2rem", color: "red" }}>
           Erro ao carregar: {error}
         </p>
@@ -53,7 +60,7 @@ export function CommunityCarousel() {
 
   return (
     <div className="carousel-wrapper">
-      <h2 className="carousel-title">Livro</h2>
+      <h2 className="carousel-title">HQs</h2>
 
       <Swiper
         modules={[Pagination]}
@@ -80,7 +87,8 @@ export function CommunityCarousel() {
               <h3 className="book-card-title">{book.titulo}</h3>
               <div className="book-card-price">
                 <span className="new-price">
-                  R$ {book.valor_troca.toFixed(2).replace(".", ",")}
+                  {/* --- CORREÇÃO 4: Garante que é um número --- */}
+                  R$ {Number(book.valor_troca).toFixed(2).replace(".", ",")}
                 </span>
               </div>
               <span className="installments">
@@ -99,3 +107,5 @@ export function CommunityCarousel() {
     </div>
   );
 }
+
+export default CommunityCarousel;

@@ -1,55 +1,61 @@
 import React from "react";
-import "../styles/CommunityList.css"; // Certifique-se que o path está correto e o arquivo existe
-import { FaUserCircle } from "react-icons/fa"; // Ícone padrão
+// Importa o CSS para este componente
+import "../styles/CommunityList.css";
+import { FaUserCircle } from "react-icons/fa"; // Ícone de usuário padrão
 
-// Interface para os dados do usuário vindos do backend
+// Interface para os dados do usuário vindos do backend (via HomePage)
+// Corresponde ao que o 'userService.ts' (backend) agora retorna
 interface CommunityUser {
   id: number;
   name: string;
-  totalLivros: number; // Propriedade com a contagem de livros
-  // avatarUrl?: string; // Descomente se o backend enviar
+  totalLivros: number;
+  avatarUrl?: string; // Opcional: se você decidir adicionar avatares
 }
 
-// Interface para as props do componente
+// Interface para as props que este componente recebe da HomePage
 interface CommunityListProps {
-  users: CommunityUser[]; // Espera receber um array de usuários
+  users: CommunityUser[];
 }
 
-// Componente funcional que recebe a lista de usuários via props
 export const CommunityList: React.FC<CommunityListProps> = ({ users }) => {
   return (
-    // Use a classe CSS apropriada (pode ser a antiga .top-traders-list)
+    // Esta classe .top-traders-list é usada para reutilizar o estilo
     <div className="top-traders-list">
       <h3>Comunidade</h3>
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            {/* Ícone ou Imagem de Avatar */}
-            {/* Se tiver avatarUrl: <img src={user.avatarUrl || '/default-avatar.png'} alt={user.name} className="trader-avatar" /> */}
-            <FaUserCircle size={30} className="trader-avatar-placeholder" />
+            {/* Lógica para mostrar avatar ou ícone padrão */}
+            {user.avatarUrl ? (
+              <img
+                src={user.avatarUrl}
+                alt={user.name}
+                className="trader-avatar"
+              />
+            ) : (
+              <FaUserCircle size={35} className="trader-avatar-placeholder" />
+            )}
 
-            {/* Informações do Usuário */}
+            {/* Informações do usuário (Nome e Livros) */}
             <div className="trader-info">
               <span className="trader-name">{user.name}</span>
-              {/* Exibe a contagem de livros */}
               <span className="trader-trades">
+                {/* Lógica para "1 livro" ou "X livros" */}
                 {user.totalLivros} {user.totalLivros === 1 ? "livro" : "livros"}
               </span>
             </div>
 
-            {/* As estrelas foram removidas */}
+            {/* As estrelas de rating foram removidas, como solicitado */}
           </li>
         ))}
       </ul>
-      {/* Mensagem caso a lista esteja vazia */}
+
+      {/* Mensagem caso a lista de usuários esteja vazia */}
       {users.length === 0 && (
-        <p style={{ textAlign: "center", padding: "10px" }}>
+        <p className="community-list-empty">
           Nenhum membro na comunidade ainda.
         </p>
       )}
     </div>
   );
 };
-
-// Default export pode não ser necessário se você usa exportação nomeada
-// export default CommunityList;

@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 // import { Navbar } from "../components/Navbar"; // <-- REMOVIDO
 import { searchBooks } from "../services/googleBooksService";
 
-// --- CSS ATUALIZADO ---
-import "../styles/AddBookPage.css"; // Para o layout da busca
-import "../styles/BookCard.css"; // Para o estilo dos cards
+// --- CSS CORRIGIDO ---
+import "../styles/AddBookPage.css"; // Para o formulário de busca
+import "../styles/BookCard.css"; // Para os cards "bonitinhos"
 // --- FIM CSS ---
 
 type BookResult = {
@@ -22,7 +22,6 @@ export function AddBookPage() {
   const [results, setResults] = useState<BookResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
-
   const navigate = useNavigate();
 
   const handleSearch = async (event: React.FormEvent) => {
@@ -54,7 +53,6 @@ export function AddBookPage() {
   };
 
   const handleAddBookToShelf = (book: BookResult) => {
-    console.log("Livro selecionado:", book);
     navigate("/livros/confirmar-detalhes", { state: { book: book } });
   };
 
@@ -64,16 +62,13 @@ export function AddBookPage() {
 
       <main className="addbook-container">
         <h2>Adicionar Novo Livro/HQ</h2>
-        <p>
-          Busque pelo título ou ISBN para adicionar um item à sua estante de
-          trocas.
-        </p>
+        <p>Busque pelo título ou ISBN para adicionar um item à sua estante.</p>
 
-        <form onSubmit={handleSearch} className="search-form">
+        <form onSubmit={handleSearch} className="addbook-search-form">
           <div className="form-group">
             <input
               type="text"
-              placeholder="Digite o título ou ISBN do livro/HQ..."
+              placeholder="Digite o título ou ISBN..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -90,33 +85,35 @@ export function AddBookPage() {
         <hr />
 
         <div className="results-container">
-          {/* REMOVIDO: "Digite algo para iniciar a busca." */}
-          {loading && <p>Carregando resultados...</p>}
+          {loading && (
+            <p className="results-message">Carregando resultados...</p>
+          )}
           {!loading && searched && results.length === 0 && (
-            <p>Nenhum resultado encontrado para "{query}".</p>
+            <p className="results-message">
+              Nenhum resultado encontrado para "{query}".
+            </p>
           )}
 
-          {/* --- ESTRUTURA "BONITINHA" APLICADA AOS RESULTADOS --- */}
-          <div className="user-grid">
+          {/* --- ESTRUTURA "BONITINHA" APLICADA --- */}
+          <div className="addbook-results-grid">
             {results.map((book) => (
               <div key={book.id} className="book-card">
                 <div className="book-card-image">
                   <img src={book.imageUrl} alt={book.title} />
                   {/* Tag mocada (opcional) */}
-                  <span className="book-card-tag seminovo">Seminovo</span>
+                  <span className="book-card-tag Novo">Novo</span>
                 </div>
-                <h3 className="book-card-title">{book.title}</h3>
-                <p className="book-card-author">{book.author}</p>
-                {/* Preço Mocado */}
-                <div className="book-card-price">
-                  <span className="new-price">
-                    R$ {(Math.random() * 20 + 10).toFixed(2).replace(".", ",")}
-                  </span>
+                {/* Wrapper de conteúdo para alinhamento correto */}
+                <div className="book-card-content">
+                  <h3 className="book-card-title">{book.title}</h3>
+                  <p className="book-card-author">{book.author}</p>
+                  <div className="book-card-price">
+                    {/* Preço Mocado (pois API do Google não tem) */}
+                    <span className="new-price">R$ ??.??</span>
+                  </div>
+                  <span className="installments">Via Google Books</span>
                 </div>
-                {/* Poster Mocado */}
-                <span className="book-card-poster">Via Google Books</span>
-
-                {/* O botão "Adicionar" usa a classe .auth-button que o .book-card já estiliza */}
+                {/* Botão de Adicionar (estilizado pelo BookCard.css) */}
                 <button
                   className="auth-button"
                   onClick={() => handleAddBookToShelf(book)}

@@ -63,3 +63,18 @@ CREATE TABLE IF NOT EXISTS mensagens (
     FOREIGN KEY (negociacao_id) REFERENCES negociacoes(id) ON DELETE CASCADE,
     FOREIGN KEY (remetente_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
+
+-- --- NOVA TABELA: LISTA DE DESEJOS (FAVORITOS) ---
+CREATE TABLE IF NOT EXISTS lista_desejos (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  usuario_id INT NOT NULL,       -- ID do usuário que favoritou
+  inventario_id INT NOT NULL,  -- ID do item no inventário que foi favoritado
+  data_adicao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  -- Chaves estrangeiras
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  FOREIGN KEY (inventario_id) REFERENCES inventario(id) ON DELETE CASCADE,
+
+  -- Impede que um usuário favorite o mesmo item duas vezes
+  UNIQUE KEY uk_usuario_item (usuario_id, inventario_id)
+);
