@@ -1,12 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App.tsx";
+
+// --- CORREÇÃO AQUI ---
+import App from "./App"; // Remove .tsx
 import "./index.css";
+// --- FIM DA CORREÇÃO ---
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { AuthProvider } from "./contexts/AuthContext.tsx";
+// --- CORREÇÃO AQUI ---
+import { AuthProvider } from "./contexts/AuthContext"; // Remove .tsx
+// --- FIM DA CORREÇÃO ---
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

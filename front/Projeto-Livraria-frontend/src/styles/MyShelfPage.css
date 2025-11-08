@@ -37,8 +37,6 @@
   gap: 30px 25px; /* Espaçamento vertical e horizontal */
 }
 
-/* --- Estilo do Botão Remover --- */
-/* (O .book-card vem do CommunityCarousel.css) */
 .book-card-remove {
   position: absolute;
   top: 10px;

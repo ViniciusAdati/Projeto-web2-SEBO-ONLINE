@@ -1,10 +1,8 @@
 // src/components/RecentBooksList.tsx
 
 import { useState, useEffect } from "react";
-// --- IMPORTAÇÕES NECESSÁRIAS ---
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth"; // Para saber quem está logado
-// --- FIM IMPORTAÇÕES ---
+import { useAuth } from "../hooks/useAuth";
 import api from "../services/api";
 import type { IBookInventory } from "../services/inventoryService";
 
@@ -16,10 +14,8 @@ export function RecentBooksList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // --- HOOKS NECESSÁRIOS ---
   const navigate = useNavigate();
-  const { user: currentUser } = useAuth(); // Pega o usuário logado
-  // --- FIM HOOKS ---
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     const loadRecentBooks = async () => {
@@ -37,34 +33,27 @@ export function RecentBooksList() {
     loadRecentBooks();
   }, []);
 
-  // --- FUNÇÃO DE CLICK PARA O CARD ---
   const handleBookClick = async (book: IBookInventory) => {
-    // 1. Verifica se o usuário está logado
     if (!currentUser) {
       alert("Você precisa estar logado para iniciar uma troca.");
       navigate("/login");
       return;
     }
 
-    // 2. Verifica se o livro é do próprio usuário
     if (book.usuario_id === currentUser.id) {
       navigate("/minha-estante");
       return;
     }
 
-    // 3. É o livro de outra pessoa, iniciar o chat/troca
     try {
-      console.log(
-        `Iniciando chat entre ${currentUser.id} e ${book.usuario_id}`
-      );
       const response = await api.post<{ negociacaoId: number }>(
         "/chat/initiate",
         {
-          otherUserId: book.usuario_id, // O ID do dono do livro
+          otherUserId: book.usuario_id,
         }
       );
       const { negociacaoId } = response.data;
-      navigate(`/chat/${negociacaoId}`); // Navega para a página de chat
+      navigate(`/chat/${negociacaoId}`);
     } catch (error: any) {
       console.error("Erro ao iniciar chat:", error);
       alert(
@@ -74,32 +63,22 @@ export function RecentBooksList() {
       );
     }
   };
-  // --- FIM DA FUNÇÃO ---
 
-  if (loading) {
-    /* ... (código de loading) ... */
-  }
-  if (error) {
-    /* ... (código de erro) ... */
-  }
-  if (books.length === 0) {
-    /* ... (código de lista vazia) ... */
-  }
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (books.length === 0) return <p>Nenhum livro recente encontrado.</p>;
 
   return (
     <div className="recent-books-container">
       <h2 className="recent-books-title">Livros Adicionados Recentemente</h2>
-
       <div className="recent-books-grid">
         {books.map((book) => (
-          // --- ALTERAÇÃO AQUI: Remove <Link> e adiciona onClick ---
           <div
             key={book.inventario_id}
             className="book-card"
-            onClick={() => handleBookClick(book)} // Chama a nova função
-            style={{ cursor: "pointer" }} // Indica que é clicável
+            onClick={() => handleBookClick(book)} // ✅ apenas 1 argumento
+            style={{ cursor: "pointer" }}
           >
-            {/* O <Link> foi removido daqui */}
             <div className="book-card-image">
               <img src={book.url_capa} alt={book.titulo} />
               <span
@@ -118,7 +97,7 @@ export function RecentBooksList() {
               </p>
               <div className="book-card-price">
                 <span className="new-price">
-                  R${" "}
+                  R$
                   {parseFloat(book.valor_troca.toString())
                     .toFixed(2)
                     .replace(".", ",")}
@@ -128,9 +107,7 @@ export function RecentBooksList() {
                 Postado por: {book.nome_usuario}
               </span>
             </div>
-            {/* O </Link> foi removido daqui */}
           </div>
-          // --- FIM DA ALTERAÇÃO ---
         ))}
       </div>
     </div>

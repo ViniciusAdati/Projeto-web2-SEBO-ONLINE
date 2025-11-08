@@ -8,7 +8,6 @@ import type { IUserPublic } from "../services/userService";
 import type { IBookInventory } from "../services/inventoryService";
 // Linhas corretas
 import "../styles/CommunityList.css";
-import "../styles/CommunityCarousel.css";
 
 export function UserProfilePage() {
   const { id } = useParams<{ id: string }>();

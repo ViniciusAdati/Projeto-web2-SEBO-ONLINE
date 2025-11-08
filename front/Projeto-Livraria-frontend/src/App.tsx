@@ -5,7 +5,7 @@ import { MainLayout } from "./components/MainLayout"; // Importa o Layout
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
-import { AddBookPage } from "./pages/AddBookPage";
+import AddBookPage from "./pages/AddBookPage";
 import { ConfirmBookDetailsPage } from "./pages/ConfirmBookDetailsPage";
 import { MyShelfPage } from "./pages/MyShelfPage";
 import { UserProfilePage } from "./pages/UserProfilePage";

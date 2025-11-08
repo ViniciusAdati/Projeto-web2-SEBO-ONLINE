@@ -1,12 +1,10 @@
-// src/routes/wishlistRoutes.ts
-
 import { Router } from "express";
-import { authMiddleware } from "../middleware/authMiddleware"; // Protege a rota
-import { toggleFavorite } from "../controllers/wishlistController";
+import { authMiddleware } from "../middleware/authMiddleware";
+import { toggleFavorite, getWishlist } from "../controllers/wishlistController";
 
 const router = Router();
 
-// Rota POST para favoritar/desfavoritar. Requer que o usuário esteja logado.
+router.get("/", authMiddleware, getWishlist);
 router.post("/toggle", authMiddleware, toggleFavorite);
 
 export default router;

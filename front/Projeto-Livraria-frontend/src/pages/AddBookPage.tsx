@@ -1,132 +1,79 @@
-// src/pages/AddBookPage.tsx
-
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import { Navbar } from "../components/Navbar"; // <-- REMOVIDO
+import { useState } from "react";
 import { searchBooks } from "../services/googleBooksService";
+import { addBookToInventory } from "../services/inventoryService";
+import { toggleWishlist, getWishlist } from "../services/wishlistService";
+import BookCard from "../components/BookCard";
 
-// --- CSS CORRIGIDO ---
-import "../styles/AddBookPage.css"; // Para o formulário de busca
-import "../styles/BookCard.css"; // Para os cards "bonitinhos"
-// --- FIM CSS ---
-
-type BookResult = {
-  id: string;
-  title: string;
-  author: string;
-  imageUrl: string;
-};
-
-export function AddBookPage() {
+export default function AddBookPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<BookResult[]>([]);
+  const [books, setBooks] = useState<any[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
-  const navigate = useNavigate();
 
-  const handleSearch = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!query) return;
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
     setLoading(true);
-    setSearched(true);
-    setResults([]);
     try {
-      const googleBooks = await searchBooks(query);
-      const formattedResults: BookResult[] = googleBooks
-        .filter((item) => item.volumeInfo.imageLinks)
-        .map((item) => ({
-          id: item.id,
-          title: item.volumeInfo.title,
-          author: item.volumeInfo.authors
-            ? item.volumeInfo.authors.join(", ")
-            : "Autor desconhecido",
-          imageUrl: item.volumeInfo.imageLinks!.thumbnail.replace(
-            "http:",
-            "https:"
-          ),
-        }));
-      setResults(formattedResults);
+      const data = await searchBooks(query);
+      setBooks(data);
+      const list = await getWishlist();
+      const ids = Array.isArray(list)
+        ? list.map((item: any) => String(item.googleBooksId || item.id))
+        : [];
+      setWishlist(ids);
     } catch (error) {
-      alert("Erro ao buscar livros.");
+      console.error("Erro ao buscar livros:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const handleAddBookToShelf = (book: BookResult) => {
-    navigate("/livros/confirmar-detalhes", { state: { book: book } });
+  const handleToggleFavorite = async (book: any) => {
+    await toggleWishlist(book);
+    const list = await getWishlist();
+    const ids = Array.isArray(list)
+      ? list.map((item: any) => String(item.googleBooksId || item.id))
+      : [];
+    setWishlist(ids);
+  };
+
+  const handleAddBook = async (book: any) => {
+    await addBookToInventory(book);
+    alert("Livro adicionado ao inventário!");
   };
 
   return (
-    <div>
-      {/* <Navbar ... /> <-- REMOVIDO */}
+    <div className="p-6 max-w-6xl mx-auto">
+      <form onSubmit={handleSearch} className="flex mb-4">
+        <input
+          type="text"
+          placeholder="Pesquise um livro..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="flex-1 border rounded-l-lg p-2"
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-r-lg"
+        >
+          Buscar
+        </button>
+      </form>
 
-      <main className="addbook-container">
-        <h2>Adicionar Novo Livro/HQ</h2>
-        <p>Busque pelo título ou ISBN para adicionar um item à sua estante.</p>
+      {loading && <p>Carregando...</p>}
 
-        <form onSubmit={handleSearch} className="addbook-search-form">
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Digite o título ou ISBN..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-          <button
-            type="submit"
-            className="addbook-search-button"
-            disabled={loading}
-          >
-            {loading ? "Buscando..." : "Buscar"}
-          </button>
-        </form>
-
-        <hr />
-
-        <div className="results-container">
-          {loading && (
-            <p className="results-message">Carregando resultados...</p>
-          )}
-          {!loading && searched && results.length === 0 && (
-            <p className="results-message">
-              Nenhum resultado encontrado para "{query}".
-            </p>
-          )}
-
-          {/* --- ESTRUTURA "BONITINHA" APLICADA --- */}
-          <div className="addbook-results-grid">
-            {results.map((book) => (
-              <div key={book.id} className="book-card">
-                <div className="book-card-image">
-                  <img src={book.imageUrl} alt={book.title} />
-                  {/* Tag mocada (opcional) */}
-                  <span className="book-card-tag Novo">Novo</span>
-                </div>
-                {/* Wrapper de conteúdo para alinhamento correto */}
-                <div className="book-card-content">
-                  <h3 className="book-card-title">{book.title}</h3>
-                  <p className="book-card-author">{book.author}</p>
-                  <div className="book-card-price">
-                    {/* Preço Mocado (pois API do Google não tem) */}
-                    <span className="new-price">R$ ??.??</span>
-                  </div>
-                  <span className="installments">Via Google Books</span>
-                </div>
-                {/* Botão de Adicionar (estilizado pelo BookCard.css) */}
-                <button
-                  className="auth-button"
-                  onClick={() => handleAddBookToShelf(book)}
-                >
-                  Adicionar à Estante
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {books.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            isFavorited={wishlist.includes(String(book.id))}
+            onToggleFavorite={() => handleToggleFavorite(book)}
+            onAddBook={() => handleAddBook(book)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
-
-export default AddBookPage;

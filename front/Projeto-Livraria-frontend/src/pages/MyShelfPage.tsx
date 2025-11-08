@@ -5,9 +5,6 @@ import { useState, useEffect } from "react";
 import { getMyBooks, deleteMyBook } from "../services/inventoryService";
 import type { IBookInventory } from "../services/inventoryService";
 import { FaTimes } from "react-icons/fa";
-
-// Importa os estilos (o 'bonito' vem do Carousel)
-import "../styles/CommunityCarousel.css";
 import "../styles/MyShelfPage.css"; // Importa o novo CSS do título/layout
 
 export function MyShelfPage() {
@@ -69,7 +66,6 @@ export function MyShelfPage() {
         // Removemos o style inline
       >
         {myBooks.map((book) => (
-          // O .book-card e classes internas usam o CSS do CommunityCarousel.css
           <div key={book.inventario_id} className="book-card">
             <button
               className="book-card-remove"
