@@ -1,3 +1,5 @@
+// backend/src/server.ts (ou app.ts / index.ts)
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -8,6 +10,9 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import { saveMessage, getOtherParticipantId } from "./services/chatService";
 import wishlistRoutes from "./routes/wishlistRoutes";
+
+// [1. ADICIONE A NOVA IMPORTAÇÃO AQUI]
+import statsRoutes from "./routes/statsRoutes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,7 +34,13 @@ app.use(
 
 app.use(express.json());
 app.use("/api", mainRouter);
-app.use("/wishlist", wishlistRoutes);
+
+// [2. CORREÇÃO DE BUG]
+// A rota estava "/wishlist" mas o frontend chama "/api/wishlist".
+app.use("/api/wishlist", wishlistRoutes);
+
+// [3. ADICIONE O NOVO USO AQUI]
+app.use("/api/stats", statsRoutes);
 
 app.get("/", (req, res) => {
   res.send("API do Projeto Web 2 (Troca de Livros) está funcionando!");
@@ -37,6 +48,7 @@ app.get("/", (req, res) => {
 
 const httpServer = http.createServer(app);
 
+// ... (O resto do seu código de Socket.io permanece 100% igual) ...
 interface UserSocketMap {
   [userId: string]: string;
 }

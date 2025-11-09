@@ -3,13 +3,14 @@
 import { pool } from "../config/database";
 import { RowDataPacket } from "mysql2";
 
-// Interface para o item retornado pelo toggle do inventário
+// --- Interfaces (usadas internamente pelo serviço) ---
 interface WishlistItem extends RowDataPacket {
   id: number;
 }
 interface GoogleWishlistItem extends RowDataPacket {
   id: number;
 }
+// --- Fim das Interfaces ---
 
 /**
  * [Função 1 - Mantida]
@@ -85,7 +86,7 @@ export const getGoogleWishlistByUserId = async (userId: number) => {
 };
 
 /**
- * [Função 3 - CORRIGIDA COM TRANSAÇÃO]
+ * [Função 3 - Corrigida com Transação]
  * Adiciona ou remove um item do INVENTÁRIO ('wishlist').
  */
 export const toggleWishlistItem = async (
@@ -94,7 +95,6 @@ export const toggleWishlistItem = async (
 ): Promise<{ isFavorited: boolean }> => {
   const connection = await pool.getConnection();
   try {
-    // Inicia a transação
     await connection.beginTransaction();
 
     const checkSql =
@@ -129,7 +129,7 @@ export const toggleWishlistItem = async (
 };
 
 /**
- * [Função 4 - CORRIGIDA COM TRANSAÇÃO]
+ * [Função 4 - Corrigida com Transação]
  * Adiciona ou remove um LIVRO DO GOOGLE da 'wishlist_books'.
  */
 export const toggleGoogleBook = async (
@@ -139,7 +139,6 @@ export const toggleGoogleBook = async (
 ) => {
   const connection = await pool.getConnection();
   try {
-    // Inicia a transação
     await connection.beginTransaction();
 
     const checkSql =
@@ -151,13 +150,11 @@ export const toggleGoogleBook = async (
     ]);
 
     if (rows.length > 0) {
-      // Já existe, vamos remover
       const deleteSql = "DELETE FROM wishlist_books WHERE id = ?";
       await connection.execute(deleteSql, [rows[0].id]);
       await connection.commit(); // Salva as mudanças
       return { isFavorited: false };
     } else {
-      // Não existe, vamos adicionar
       const insertSql =
         "INSERT INTO wishlist_books (user_id, google_book_id, title, author, image_url) VALUES (?, ?, ?, ?, ?)";
       await connection.execute(insertSql, [
@@ -177,6 +174,75 @@ export const toggleGoogleBook = async (
       error
     );
     throw new Error("Erro ao processar sua solicitação de favoritos.");
+  } finally {
+    connection.release();
+  }
+};
+
+/**
+ * [Função 5 - ADICIONADA]
+ * Busca todas as estatísticas para o Dashboard da Home Page.
+ */
+export const getDashboardStats = async (userId: number) => {
+  const connection = await pool.getConnection();
+
+  try {
+    // 1. Minha Coleção (Livros que EU adicionei)
+    const myBooksSql =
+      "SELECT COUNT(*) as count FROM inventario WHERE usuario_id = ?";
+    const [myBooksRows] = await connection.execute<RowDataPacket[]>(
+      myBooksSql,
+      [userId]
+    );
+    const myCollectionCount = myBooksRows[0].count;
+
+    // 2. Matches Disponíveis (Livros que OUTROS adicionaram)
+    const otherBooksSql =
+      "SELECT COUNT(*) as count FROM inventario WHERE usuario_id != ?";
+    const [otherBooksRows] = await connection.execute<RowDataPacket[]>(
+      otherBooksSql,
+      [userId]
+    );
+    const otherBooksCount = otherBooksRows[0].count;
+
+    // 3. Lista de Desejos (Meus favoritos do Inventário + Google)
+    const inventoryWishSql =
+      "SELECT COUNT(*) as count FROM wishlist WHERE user_id = ?";
+    const [invWishRows] = await connection.execute<RowDataPacket[]>(
+      inventoryWishSql,
+      [userId]
+    );
+
+    const googleWishSql =
+      "SELECT COUNT(*) as count FROM wishlist_books WHERE user_id = ?";
+    const [googleWishRows] = await connection.execute<RowDataPacket[]>(
+      googleWishSql,
+      [userId]
+    );
+
+    const wishlistCount = invWishRows[0].count + googleWishRows[0].count;
+
+    // 4. Trocas Ativas (Conversas que eu participo)
+    const chatsSql =
+      "SELECT COUNT(DISTINCT negociacao_id) as count FROM negociacao_participantes WHERE usuario_id = ?";
+    const [chatsRows] = await connection.execute<RowDataPacket[]>(chatsSql, [
+      userId,
+    ]);
+    const chatsCount = chatsRows[0].count;
+
+    // Retorna o objeto completo
+    return {
+      myCollectionCount,
+      otherBooksCount,
+      wishlistCount,
+      chatsCount,
+    };
+  } catch (error) {
+    console.error(
+      "[StatsService:getDashboardStats] Erro ao buscar stats:",
+      error
+    );
+    throw new Error("Erro ao carregar estatísticas do dashboard.");
   } finally {
     connection.release();
   }
