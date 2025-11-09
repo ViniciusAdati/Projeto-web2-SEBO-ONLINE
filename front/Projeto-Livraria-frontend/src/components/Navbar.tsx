@@ -1,3 +1,5 @@
+// src/components/Navbar.tsx
+
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
@@ -45,10 +47,15 @@ export function Navbar({ onChatIconClick }: NavbarProps) {
     navigate("/login");
   };
 
+  //
+  // --- [CORREÇÃO AQUI] ---
+  //
   const navLinks = [
     { to: "/livros/adicionar", label: "Adicionar Livro" },
     { to: "/minha-estante", label: "Estante" },
+    { to: "/wishlist", label: "Wishlist" }, // <-- [NOVO] Link adicionado
   ];
+  // --- FIM DA CORREÇÃO ---
 
   // --- CORREÇÃO (TS2339): Usa 'user.nome' (com 'o') e 'user.avatarUrl' ---
   const userMock = {

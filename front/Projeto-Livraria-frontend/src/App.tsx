@@ -11,6 +11,9 @@ import { MyShelfPage } from "./pages/MyShelfPage";
 import { UserProfilePage } from "./pages/UserProfilePage";
 import { ChatPage } from "./pages/ChatPage";
 
+// 1. IMPORTE A NOVA PÁGINA DA WISHLIST
+import { WishlistPage } from "./pages/WishlistPage";
+
 function App() {
   return (
     <Routes>
@@ -28,13 +31,13 @@ function App() {
         />
         <Route path="/minha-estante" element={<MyShelfPage />} />
 
-        {/* --- CORREÇÃO AQUI --- */}
-        {/* Adiciona :id para aceitar IDs dinâmicos (ex: /perfil/2) */}
         <Route path="/perfil/:id" element={<UserProfilePage />} />
-        {/* --- FIM DA CORREÇÃO --- */}
-
         <Route path="/configuracoes" element={<div>Configurações</div>} />
         <Route path="/chat/:negociacaoId" element={<ChatPage />} />
+
+        {/* 2. ADICIONE A NOVA ROTA AQUI
+         */}
+        <Route path="/wishlist" element={<WishlistPage />} />
       </Route>
     </Routes>
   );
