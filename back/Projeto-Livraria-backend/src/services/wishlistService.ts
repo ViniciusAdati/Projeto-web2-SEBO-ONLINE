@@ -12,7 +12,7 @@ interface GoogleWishlistItem extends RowDataPacket {
 }
 
 /**
- * [Função 1 - MODIFICADA]
+ * [Função 1 - Mantida]
  * Busca a lista de desejos (do Inventário) e padroniza os campos.
  */
 export const getWishlistByUserId = async (userId: number) => {
@@ -51,7 +51,7 @@ export const getWishlistByUserId = async (userId: number) => {
 };
 
 /**
- * [Função 2 - ADICIONADA]
+ * [Função 2 - Mantida]
  * Busca a lista de desejos (do Google) e padroniza os campos.
  */
 export const getGoogleWishlistByUserId = async (userId: number) => {
@@ -85,7 +85,7 @@ export const getGoogleWishlistByUserId = async (userId: number) => {
 };
 
 /**
- * [Função 3 - Mantida]
+ * [Função 3 - CORRIGIDA COM TRANSAÇÃO]
  * Adiciona ou remove um item do INVENTÁRIO ('wishlist').
  */
 export const toggleWishlistItem = async (
@@ -94,6 +94,9 @@ export const toggleWishlistItem = async (
 ): Promise<{ isFavorited: boolean }> => {
   const connection = await pool.getConnection();
   try {
+    // Inicia a transação
+    await connection.beginTransaction();
+
     const checkSql =
       "SELECT id FROM wishlist WHERE user_id = ? AND inventario_id = ?";
     const [rows] = await connection.execute<WishlistItem[]>(checkSql, [
@@ -104,14 +107,17 @@ export const toggleWishlistItem = async (
     if (rows.length > 0) {
       const deleteSql = "DELETE FROM wishlist WHERE id = ?";
       await connection.execute(deleteSql, [rows[0].id]);
+      await connection.commit(); // Salva as mudanças
       return { isFavorited: false };
     } else {
       const insertSql =
         "INSERT INTO wishlist (user_id, inventario_id) VALUES (?, ?)";
       await connection.execute(insertSql, [userId, inventarioId]);
+      await connection.commit(); // Salva as mudanças
       return { isFavorited: true };
     }
   } catch (error) {
+    await connection.rollback(); // Desfaz em caso de erro
     console.error(
       "[WishlistService:toggle] Erro ao favoritar/desfavoritar:",
       error
@@ -123,7 +129,7 @@ export const toggleWishlistItem = async (
 };
 
 /**
- * [Função 4 - Mantida]
+ * [Função 4 - CORRIGIDA COM TRANSAÇÃO]
  * Adiciona ou remove um LIVRO DO GOOGLE da 'wishlist_books'.
  */
 export const toggleGoogleBook = async (
@@ -133,6 +139,9 @@ export const toggleGoogleBook = async (
 ) => {
   const connection = await pool.getConnection();
   try {
+    // Inicia a transação
+    await connection.beginTransaction();
+
     const checkSql =
       "SELECT id FROM wishlist_books WHERE user_id = ? AND google_book_id = ?";
 
@@ -142,10 +151,13 @@ export const toggleGoogleBook = async (
     ]);
 
     if (rows.length > 0) {
+      // Já existe, vamos remover
       const deleteSql = "DELETE FROM wishlist_books WHERE id = ?";
       await connection.execute(deleteSql, [rows[0].id]);
+      await connection.commit(); // Salva as mudanças
       return { isFavorited: false };
     } else {
+      // Não existe, vamos adicionar
       const insertSql =
         "INSERT INTO wishlist_books (user_id, google_book_id, title, author, image_url) VALUES (?, ?, ?, ?, ?)";
       await connection.execute(insertSql, [
@@ -155,9 +167,11 @@ export const toggleGoogleBook = async (
         bookDetails.author,
         bookDetails.imageUrl,
       ]);
+      await connection.commit(); // Salva as mudanças
       return { isFavorited: true };
     }
   } catch (error) {
+    await connection.rollback(); // Desfaz em caso de erro
     console.error(
       "[WishlistService:toggleGoogleBook] Erro ao favoritar livro do Google:",
       error

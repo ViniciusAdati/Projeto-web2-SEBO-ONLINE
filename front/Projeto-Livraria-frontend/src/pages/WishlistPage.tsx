@@ -1,22 +1,32 @@
 // src/pages/WishlistPage.tsx
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-// [CORREÇÃO] Importa a interface unificada (que corrigimos no Passo 3)
-import { WishlistItem } from "../services/wishlistService";
+import {
+  WishlistItem,
+  toggleGoogleFavoriteApi, // Importa a API de toggle do Google
+} from "../services/wishlistService";
 
 /**
- * [CORREÇÃO]
- * Este é o card de exemplo que você tinha, mas atualizado
- * para usar os nomes de propriedade corretos da interface unificada.
+ * [CARD ATUALIZADO]
+ * O card agora recebe a função 'onRemove' e o estado 'isLoading'
  */
-const SimpleBookCard = ({ item }: { item: WishlistItem }) => (
+const SimpleBookCard = ({
+  item,
+  onRemove,
+  isLoading,
+}: {
+  item: WishlistItem;
+  onRemove: (item: WishlistItem) => void;
+  isLoading: boolean;
+}) => (
   <div
     style={{
       border: "1px solid #ccc",
       padding: "10px",
       margin: "10px",
       display: "flex",
-      width: "300px",
+      flexDirection: "column", // Mudei para coluna para o botão caber
+      width: "220px", // Ajustei a largura
       borderRadius: "8px",
       position: "relative",
     }}
@@ -38,30 +48,33 @@ const SimpleBookCard = ({ item }: { item: WishlistItem }) => (
       {item.type === "google" ? "Google" : "Inventário"}
     </span>
 
-    {/* [CORREÇÃO] usa item.imageUrl (antes era url_capa) */}
     <img
       src={item.imageUrl}
       alt={item.title}
       style={{
-        width: "80px",
-        height: "120px",
-        marginRight: "10px",
+        width: "120px",
+        height: "180px",
         objectFit: "cover",
+        margin: "0 auto", // Centraliza a imagem
+        marginTop: "30px",
       }}
     />
 
-    <div>
-      {/* [CORREÇÃO] usa item.title (antes era titulo) */}
-      <h4 style={{ margin: 0, marginTop: "30px", fontSize: "1em" }}>
+    <div style={{ marginTop: "10px", flexGrow: 1 }}>
+      <h4
+        style={{
+          margin: 0,
+          fontSize: "1em",
+          height: "40px",
+          overflow: "hidden",
+        }}
+        title={item.title}
+      >
         {item.title}
       </h4>
-
-      {/* [CORREÇÃO] usa item.author (antes era autor) */}
       <p style={{ margin: "4px 0", fontSize: "0.9em", color: "#444" }}>
         por {item.author}
       </p>
-
-      {/* [CORREÇÃO] Mostra o estado_conservacao (se existir) */}
       {item.type === "inventory" && (
         <p
           style={{
@@ -75,12 +88,69 @@ const SimpleBookCard = ({ item }: { item: WishlistItem }) => (
         </p>
       )}
     </div>
+
+    {/* --- O BOTÃO DE REMOVER ESTÁ AQUI --- */}
+    <button
+      onClick={() => onRemove(item)}
+      disabled={isLoading}
+      style={{
+        backgroundColor: "#dc3545",
+        color: "white",
+        border: "none",
+        padding: "8px 10px",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginTop: "10px",
+        width: "100%",
+      }}
+    >
+      {isLoading ? "Removendo..." : "Remover"}
+    </button>
   </div>
 );
 
 export function WishlistPage() {
-  // 1. Pega a lista de desejos (agora unificada) direto do contexto
-  const { wishlist } = useAuth();
+  // 1. Pega a lista e as funções de manipulação do AuthContext
+  const { wishlist, toggleWishlistItem, fetchWishlist } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  // 2. [NOVA FUNÇÃO] Lida com a remoção de QUALQUER tipo de item
+  const handleRemoveFavorite = async (item: WishlistItem) => {
+    if (loading) return; // Previne cliques duplos
+
+    const confirmDelete = window.confirm(
+      `Tem certeza que quer remover "${item.title}" dos favoritos?`
+    );
+    if (!confirmDelete) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (item.type === "google") {
+        // 1. Livro do Google: chama a API de toggle do Google
+        await toggleGoogleFavoriteApi(
+          item.google_book_id!, // '!' garante ao TS que não é nulo
+          {
+            title: item.title,
+            author: item.author,
+            imageUrl: item.imageUrl,
+          }
+        );
+        // 2. Força a atualização da lista no AuthContext
+        await fetchWishlist();
+      } else if (item.type === "inventory") {
+        // 1. Livro do Inventário: chama a função de toggle do Inventário
+        // (Esta função já chama 'fetchWishlist' por si só)
+        await toggleWishlistItem(item.inventario_id!);
+      }
+    } catch (err) {
+      console.error("Erro ao remover favorito:", err);
+      alert("Não foi possível remover o favorito.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
@@ -88,14 +158,21 @@ export function WishlistPage() {
 
       {wishlist.length === 0 && <p>Sua lista de desejos está vazia.</p>}
 
-      {/* 2. Exibe a lista */}
+      {/* 3. Exibe a lista (agora passando as props novas) */}
       <div
-        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
       >
         {wishlist.map((item) => (
-          // O ID agora pode ser duplicado (um do google, um do inventário)
-          // Usamos 'type' para garantir uma chave única
-          <SimpleBookCard key={`${item.type}-${item.id}`} item={item} />
+          <SimpleBookCard
+            key={`${item.type}-${item.id}`}
+            item={item}
+            onRemove={handleRemoveFavorite} // <-- Passa a função
+            isLoading={loading} // <-- Passa o estado de loading
+          />
         ))}
       </div>
     </div>

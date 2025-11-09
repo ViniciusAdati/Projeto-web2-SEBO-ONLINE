@@ -37,6 +37,16 @@
   gap: 30px 25px; /* Espaçamento vertical e horizontal */
 }
 
+/* --- [A CORREÇÃO ESTÁ AQUI] ---
+ O "card" precisa de position: relative para que o "X" (com position: absolute) 
+ se posicione em relação a ele, e não em relação à tela.
+*/
+.book-card {
+  position: relative;
+  /* (Se você tiver outros estilos para .book-card, eles devem estar em BookCard.css) */
+  /* (Mas adicionar 'position: relative' aqui também funciona se este CSS for carregado) */
+}
+
 .book-card-remove {
   position: absolute;
   top: 10px;
