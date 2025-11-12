@@ -1,7 +1,4 @@
-/* src/styles/CommunityList.css */
-/* Este é o estilo que imita o "Top Traders" */
-
-.top-traders-list { /* Vamos reutilizar esta classe como container */
+.top-traders-list {
   background-color: #ffffff;
   border-radius: 8px;
   padding: 1.5rem;
@@ -17,7 +14,7 @@
 }
 
 .top-traders-list ul {
-  list-style: none; /* Remove o ponto de lista (•) */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
@@ -32,11 +29,10 @@
   margin-bottom: 0;
 }
 
-/* Ícone de usuário (placeholder) */
-.trader-avatar-placeholder { 
+.trader-avatar-placeholder {
   width: 35px;
   height: 35px;
-  min-width: 35px; /* Evita encolhimento */
+  min-width: 35px;
   border-radius: 50%;
   color: #ccc;
   background-color: #f0f0f0;
@@ -46,12 +42,10 @@
   justify-content: center;
 }
 
-/* Informações (Nome e Livros) */
 .trader-info {
-  flex-grow: 1; /* Ocupa o espaço */
+  flex-grow: 1;
   line-height: 1.4;
-  /* Remove o destaque azul ao selecionar texto */
-  user-select: none; 
+  user-select: none;
 }
 
 .trader-name {
@@ -61,14 +55,12 @@
   font-size: 0.95rem;
 }
 
-/* Classe para "X livros" */
-.trader-trades { 
+.trader-trades {
   display: block;
   font-size: 0.85rem;
   color: #777;
 }
 
-/* Mensagem de lista vazia */
 .community-list-empty {
   text-align: center;
   padding: 10px;

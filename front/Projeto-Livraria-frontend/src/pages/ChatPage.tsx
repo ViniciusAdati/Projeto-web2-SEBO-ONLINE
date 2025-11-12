@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getChatHistoryApi } from "../services/chatService";
 import type { IChatMessage } from "../services/chatService";
-// import { Navbar } from "../components/Navbar"; // <-- LINHA REMOVIDA
 import "../styles/ChatPage.css";
 
 export function ChatPage() {
@@ -70,7 +69,7 @@ export function ChatPage() {
     const messageDataLocal: IChatMessage = {
       id: Math.random(),
       remetente_id: user.id,
-      negociacaoId: negociacaoId, // Usa a string
+      negociacaoId: negociacaoId,
       remetente_nome: user.nome,
       conteudo: newMessage,
       timestamp: messageDataSocket.timestamp,
@@ -83,7 +82,6 @@ export function ChatPage() {
   if (loading) {
     return (
       <div>
-        {/* <Navbar onChatIconClick={() => {}}/> */} {/* <-- LINHA REMOVIDA */}
         <p>Carregando histórico de chat...</p>
       </div>
     );
@@ -91,7 +89,6 @@ export function ChatPage() {
 
   return (
     <div className="chat-page-container">
-      {/* <Navbar onChatIconClick={() => {}}/> */} {/* <-- LINHA REMOVIDA */}
       <div className="chat-window">
         <div className="chat-header">
           {" "}
@@ -131,4 +128,4 @@ export function ChatPage() {
   );
 }
 
-export default ChatPage; // Adiciona export default
+export default ChatPage;

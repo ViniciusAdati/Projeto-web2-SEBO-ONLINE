@@ -6,7 +6,6 @@ export const addBook = async (req: CustomRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const bookData = req.body;
-    // Validação básica (opcional, mas recomendado)
     if (
       !bookData ||
       !bookData.googleBookId ||
@@ -19,7 +18,7 @@ export const addBook = async (req: CustomRequest, res: Response) => {
       console.error(
         "[inventoryController:addBook] Dados incompletos recebidos:",
         bookData
-      ); // Log dos dados recebidos
+      );
       return res
         .status(400)
         .json({ message: "Dados incompletos para adicionar o livro." });
@@ -27,7 +26,6 @@ export const addBook = async (req: CustomRequest, res: Response) => {
     const result = await inventoryService.addBookToInventory(userId, bookData);
     return res.status(201).json(result);
   } catch (error: any) {
-    // --- CORREÇÃO: Adicionado console.error ---
     console.error(
       "[inventoryController:addBook] Erro ao adicionar livro:",
       error
@@ -43,7 +41,6 @@ export const getRecent = async (req: Request, res: Response) => {
     const books = await inventoryService.getRecentBooks();
     return res.status(200).json(books);
   } catch (error: any) {
-    // --- CORREÇÃO: Adicionado console.error ---
     console.error(
       "[inventoryController:getRecent] Erro ao buscar recentes:",
       error
@@ -60,7 +57,6 @@ export const getMyInventory = async (req: CustomRequest, res: Response) => {
     const books = await inventoryService.getBooksByUserId(userId);
     return res.status(200).json(books);
   } catch (error: any) {
-    // --- CORREÇÃO: Adicionado console.error ---
     console.error(
       "[inventoryController:getMyInventory] Erro ao buscar minha estante:",
       error
@@ -86,12 +82,10 @@ export const deleteBook = async (req: CustomRequest, res: Response) => {
     );
     return res.status(200).json(result);
   } catch (error: any) {
-    // --- CORREÇÃO: Adicionado console.error ---
     console.error(
       "[inventoryController:deleteBook] Erro ao deletar livro:",
       error
     );
-    // Ajusta o status code dependendo do erro do service
     return res
       .status(error.message.includes("não encontrado") ? 404 : 500)
       .json({ message: error.message });
@@ -107,15 +101,12 @@ export const getPublicInventoryByUser = async (req: Request, res: Response) => {
     const books = await inventoryService.getBooksByUserId(userId);
     return res.status(200).json(books);
   } catch (error: any) {
-    // --- CORREÇÃO: Adicionado console.error ---
     console.error(
       "[inventoryController:getPublicInventoryByUser] Erro ao buscar inventário público:",
       error
     );
-    return res
-      .status(500)
-      .json({
-        message: error.message || "Erro interno ao buscar inventário público.",
-      });
+    return res.status(500).json({
+      message: error.message || "Erro interno ao buscar inventário público.",
+    });
   }
 };

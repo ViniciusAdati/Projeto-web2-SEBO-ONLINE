@@ -19,7 +19,6 @@ export default function AddBookPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
-  // 🔍 Busca os livros na API do Google
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!query.trim()) return;
@@ -41,7 +40,6 @@ export default function AddBookPage() {
 
       setResults(mapped);
 
-      // Carrega a lista de favoritos
       const list = await getWishlist();
       const ids = Array.isArray(list)
         ? list.map((item: any) => String(item.googleBooksId || item.id))
@@ -54,7 +52,6 @@ export default function AddBookPage() {
     }
   };
 
-  // 💖 Favoritar ou desfavoritar livro
   const handleToggleFavorite = async (book: BookResult) => {
     await toggleWishlist(book.id);
     const list = await getWishlist();
@@ -64,7 +61,6 @@ export default function AddBookPage() {
     setWishlist(ids);
   };
 
-  // 📚 Adicionar à estante
   const handleAddBookToShelf = async (book: BookResult) => {
     await addBookToInventory(book);
     alert("Livro adicionado à estante!");
@@ -76,7 +72,6 @@ export default function AddBookPage() {
         <h2>Adicionar Novo Livro/HQ</h2>
         <p>Busque pelo título ou ISBN para adicionar um item à sua estante.</p>
 
-        {/* --- FORM DE BUSCA --- */}
         <form
           onSubmit={handleSearch}
           className="addbook-search-form flex flex-col md:flex-row items-center gap-3"
@@ -89,7 +84,6 @@ export default function AddBookPage() {
             className="flex-1 border rounded-lg p-2 w-full md:w-auto"
           />
 
-          {/* ✅ margin-top aplicada em telas pequenas */}
           <button
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-3 md:mt-0 hover:bg-blue-600 transition"
@@ -100,7 +94,6 @@ export default function AddBookPage() {
 
         <hr className="my-4" />
 
-        {/* --- RESULTADOS --- */}
         <div className="results-container">
           {loading && (
             <p className="results-message">Carregando resultados...</p>
@@ -117,7 +110,6 @@ export default function AddBookPage() {
                 <div className="book-card-image relative">
                   <img src={book.imageUrl} alt={book.title} />
 
-                  {/* ❤️ BOTÃO FAVORITAR */}
                   <button
                     type="button"
                     className={`favorite-btn ${

@@ -61,7 +61,7 @@
 }
 
 .message-bubble.sent {
-  background-color: #ffd700; /* Amarelo (cor do tema) */
+  background-color: #ffd700;
   color: #333;
   align-self: flex-end;
   border-bottom-right-radius: 4px;

@@ -1,23 +1,14 @@
-// src/pages/HomePage.tsx
-
 import { useState, useEffect } from "react";
-// import { Navbar } from "../components/Navbar"; // <-- REMOVIDO (Corrigido da última vez)
 import SummaryCards from "../components/SummaryCards";
-// import MatchList from "../components/MatchList"; // <-- REMOVIDO
-import { CommunityList } from "../components/CommunityList"; 
-import api from "../services/api"; 
-import "../styles/HomePage.css"; 
-
-// --- NOVO ---
-// Importa a lista de livros que acabamos de criar
-import { RecentBooksList } from "../components/RecentBooksList"; 
-// --- FIM NOVO ---
+import { CommunityList } from "../components/CommunityList";
+import api from "../services/api";
+import "../styles/HomePage.css";
+import { RecentBooksList } from "../components/RecentBooksList";
 
 interface CommunityUser {
   id: number;
   name: string;
   totalLivros: number;
-  // avatarUrl?: string; 
 }
 
 export function HomePage() {
@@ -30,7 +21,7 @@ export function HomePage() {
       try {
         setLoadingCommunity(true);
         setErrorCommunity(null);
-        const response = await api.get<CommunityUser[]>("/users/community"); 
+        const response = await api.get<CommunityUser[]>("/users/community");
         setCommunityUsers(response.data);
       } catch (err) {
         console.error("Erro ao buscar usuários:", err);
@@ -44,8 +35,6 @@ export function HomePage() {
 
   return (
     <div className="homepage-layout">
-      {/* <Navbar ... /> <-- REMOVIDO */}
-
       <main className="dashboard-content">
         <h1 className="dashboard-title">Dashboard de Matches</h1>
         <p className="dashboard-subtitle">
@@ -53,19 +42,15 @@ export function HomePage() {
         </p>
         <SummaryCards />
         <div className="dashboard-grid">
-          
-          {/* --- ALTERAÇÃO AQUI --- */}
-          {/* A coluna principal agora mostra os livros recentes */}
           <section className="main-column">
-            <RecentBooksList /> 
+            <RecentBooksList />
           </section>
-          {/* --- FIM DA ALTERAÇÃO --- */}
 
           <aside className="sidebar-column">
             {loadingCommunity && <p>Carregando comunidade...</p>}
-            {errorCommunity && <p style={{ color: 'red' }}>{errorCommunity}</p>}
+            {errorCommunity && <p style={{ color: "red" }}>{errorCommunity}</p>}
             {!loadingCommunity && !errorCommunity && (
-              <CommunityList users={communityUsers} /> 
+              <CommunityList users={communityUsers} />
             )}
           </aside>
         </div>

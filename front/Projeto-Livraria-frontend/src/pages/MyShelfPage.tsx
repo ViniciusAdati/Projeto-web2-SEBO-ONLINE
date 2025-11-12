@@ -1,11 +1,8 @@
-// src/pages/MyShelfPage.tsx
-
 import { useState, useEffect } from "react";
-// import { Navbar } from "../components/Navbar"; // <-- REMOVIDO (Corrige duplicata)
 import { getMyBooks, deleteMyBook } from "../services/inventoryService";
 import type { IBookInventory } from "../services/inventoryService";
 import { FaTimes } from "react-icons/fa";
-import "../styles/MyShelfPage.css"; // Importa o novo CSS do título/layout
+import "../styles/MyShelfPage.css";
 
 export function MyShelfPage() {
   const [myBooks, setMyBooks] = useState<IBookInventory[]>([]);
@@ -61,10 +58,7 @@ export function MyShelfPage() {
     }
 
     return (
-      <div
-        className="user-grid" // Esta classe usa o CSS do MyShelfPage.css
-        // Removemos o style inline
-      >
+      <div className="user-grid">
         {myBooks.map((book) => (
           <div key={book.inventario_id} className="book-card">
             <button
@@ -86,7 +80,6 @@ export function MyShelfPage() {
               </span>
             </div>
             <h3 className="book-card-title">{book.titulo}</h3>
-            {/* Adicionando autor que faltava na estrutura */}
             <p className="book-card-author">
               {book.autor || "Autor desconhecido"}
             </p>
@@ -109,11 +102,8 @@ export function MyShelfPage() {
 
   return (
     <div>
-      {/* <Navbar ... /> <-- REMOVIDO */}
       <div className="list-wrapper">
-        {/* --- CORREÇÃO: Trocada a classe do título --- */}
         <h2 className="shelf-title">Minha Estante</h2>
-        {/* --- FIM DA CORREÇÃO --- */}
         {renderContent()}
       </div>
     </div>

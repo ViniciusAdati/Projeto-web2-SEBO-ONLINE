@@ -1,35 +1,29 @@
-/* src/styles/AuthPage.css */
-
-/* Define um fundo cinza claro para a página inteira */
 body {
   background-color: #f4f7f6;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
 }
 
-/* O container principal que vira um "card" */
 .auth-container {
   display: flex;
   max-width: 900px;
-  margin: 50px auto; /* Centraliza o card na tela */
+  margin: 50px auto;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  overflow: hidden; /* Para os cantos arredondados */
+  overflow: hidden;
 }
 
-/* Estilo para as duas colunas (Registrados e Novos) */
 .auth-column {
-  flex: 1; /* Cada coluna ocupa 50% */
+  flex: 1;
   padding: 40px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
-/* Coluna da esquerda (Login) */
 .auth-column:first-child {
-  border-right: 1px solid #e9ecef; /* Linha divisória sutil */
+  border-right: 1px solid #e9ecef;
 }
 
 .auth-column h2 {
@@ -46,10 +40,9 @@ body {
   margin-bottom: 25px;
 }
 
-/* --- Estilos do Formulário --- */
 .form-group {
   margin-bottom: 20px;
-  width: 100%; /* Ocupa toda a largura da coluna */
+  width: 100%;
 }
 
 .form-group label {
@@ -61,10 +54,9 @@ body {
 }
 
 .form-group label span {
-  color: #e74c3c; /* Asterisco vermelho */
+  color: #e74c3c;
 }
 
-/* Inputs de texto, email e senha */
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"] {
@@ -74,18 +66,16 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   color: #333;
-  box-sizing: border-box; /* Importante para o padding não quebrar o layout */
+  box-sizing: border-box;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Efeito de foco (outline azul) */
 .form-group input:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
   outline: none;
 }
 
-/* Checkbox "Show Password" */
 .form-checkbox {
   display: flex;
   align-items: center;
@@ -99,7 +89,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* Link "Esqueceu a senha?" */
 .form-link {
   display: block;
   margin-top: 15px;
@@ -112,22 +101,19 @@ body {
   text-decoration: underline;
 }
 
-/* Mensagem de erro do formulário */
 .form-error-message {
-  color: #dc3545; /* Vermelho */
+  color: #dc3545;
   text-align: center;
   margin-bottom: 15px;
   font-weight: 500;
 }
 
-/* Texto de campos obrigatórios */
 .required-text {
   font-size: 0.8rem;
   color: #777;
   margin-top: 1.5rem !important;
 }
 
-/* --- Botões --- */
 .auth-button {
   width: 100%;
   padding: 12px;
@@ -139,7 +125,6 @@ body {
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* Botão "Entrar" (Verde, como no seu print) */
 .auth-button[type="submit"] {
   background-color: #28a745;
   color: white;
@@ -151,29 +136,27 @@ body {
   transform: scale(0.98);
 }
 
-/* Botão "Criar Conta" (Azul, como no seu print) */
 .auth-button-secondary {
   background-color: #007bff;
   color: white;
   text-decoration: none;
   text-align: center;
-  line-height: 1.5; /* Para alinhar o texto do Link como um botão */
-  margin-top: auto; /* Empurra o botão "Criar Conta" para baixo */
+  line-height: 1.5;
+  margin-top: auto;
 }
 .auth-button-secondary:hover {
   background-color: #0056b3;
 }
 
-/* --- Responsividade (para telas de celular) --- */
 @media (max-width: 900px) {
   .auth-container {
-    flex-direction: column; /* Empilha as colunas */
+    flex-direction: column;
     margin: 20px;
     padding: 10px;
   }
   .auth-column:first-child {
     border-right: none;
-    border-bottom: 1px solid #e9ecef; /* Linha divisória horizontal */
+    border-bottom: 1px solid #e9ecef;
     padding-bottom: 30px;
   }
   .auth-column {

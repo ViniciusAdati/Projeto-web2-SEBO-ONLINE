@@ -1,9 +1,4 @@
-// src/routes/inventoryRoutes.ts
-
 import { Router } from "express";
-
-// --- CORREÇÃO AQUI ---
-// O nome do arquivo foi corrigido (removido o espaço)
 import {
   addBook,
   getRecent,
@@ -11,7 +6,6 @@ import {
   deleteBook,
   getPublicInventoryByUser,
 } from "../controllers/inventoryController";
-// --- FIM DA CORREÇÃO ---
 
 import { authMiddleware } from "../middleware/authMiddleware";
 

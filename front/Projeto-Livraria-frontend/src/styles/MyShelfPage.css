@@ -1,23 +1,18 @@
-/* src/styles/MyShelfPage.css */
-
-/* --- Layout Principal --- */
 .list-wrapper {
-  max-width: 1200px; /* Limita a largura do conteúdo */
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1.5rem;
 }
 
-/* --- Título "Minha Estante" (CLEAN) --- */
 .shelf-title {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #343a40; /* Cinza escuro, alinhado com o dashboard */
+  color: #343a40;
   margin-bottom: 2rem;
   padding-bottom: 10px;
-  border-bottom: 2px solid #e9ecef; /* Linha sutil para separar */
+  border-bottom: 2px solid #e9ecef;
 }
 
-/* --- Mensagens de Carregando/Vazio --- */
 .shelf-message {
   text-align: center;
   padding: 3rem 0;
@@ -25,16 +20,13 @@
   color: #6c757d;
 }
 .shelf-message.error {
-  color: #dc3545; /* Vermelho para erros */
+  color: #dc3545;
 }
 
-/* --- Grid dos Livros --- */
-/* Esta classe .user-grid já está no seu TSX */
 .user-grid {
   display: grid;
-  /* Colunas responsivas, min 200px */
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 30px 25px; /* Espaçamento vertical e horizontal */
+  gap: 30px 25px;
 }
 
 .book-card-remove {
@@ -53,14 +45,14 @@
   font-size: 1rem;
   cursor: pointer;
   z-index: 10;
-  opacity: 0; /* Invisível por padrão */
+  opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .book-card:hover .book-card-remove {
-  opacity: 1; /* Aparece no hover */
+  opacity: 1;
 }
 
 .book-card-remove:hover {
-  background: #dc3545; /* Fica vermelho forte no hover */
+  background: #dc3545;
 }

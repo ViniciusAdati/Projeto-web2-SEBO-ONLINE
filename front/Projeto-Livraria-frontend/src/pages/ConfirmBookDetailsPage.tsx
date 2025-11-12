@@ -1,10 +1,7 @@
-// src/pages/ConfirmBookDetailsPage.tsx (CÓDIGO ATUALIZADO)
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addBookToInventory } from "../services/inventoryService";
 
-// Importa os estilos necessários
 import "../styles/AuthPage.css";
 import "../styles/AddBookPage.css";
 
@@ -56,25 +53,20 @@ export function ConfirmBookDetailsPage() {
 
   return (
     <div>
-      {/* Container principal para as duas colunas */}
       <div className="auth-container confirm-book-details-container">
-        {/* Coluna da Esquerda: Confirme o Item */}
         <div className="auth-column confirm-item-column">
           <h2>Confirme o Item</h2>
           <div className="book-image-wrapper">
             {" "}
-            {/* Adiciona um wrapper para a imagem */}
             <img
               src={bookDataFromSearch.imageUrl}
               alt={bookDataFromSearch.title}
-              // Estilos inline removidos e movidos para o CSS
             />
           </div>
           <h3 className="book-title-display">{bookDataFromSearch.title}</h3>
           <p className="book-author-display">{bookDataFromSearch.author}</p>
         </div>
 
-        {/* Coluna da Direita: Detalhes da Cópia */}
         <div className="auth-column add-details-column">
           <h2>Adicionar Detalhes da sua Cópia</h2>
           <form onSubmit={handleFinalSubmit}>

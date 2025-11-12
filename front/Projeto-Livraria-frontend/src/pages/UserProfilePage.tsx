@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// import { Navbar } from "../components/Navbar"; // <-- LINHA REMOVIDA
 import { getUserById } from "../services/userService";
 import { getBooksForPublicProfile } from "../services/inventoryService";
 import { initiateChatApi } from "../services/chatService";
 import type { IUserPublic } from "../services/userService";
 import type { IBookInventory } from "../services/inventoryService";
-// Linhas corretas
 import "../styles/CommunityList.css";
 
 export function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate(); // 3. Inicializar o hook
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<IUserPublic | null>(null);
   const [books, setBooks] = useState<IBookInventory[]>([]);
@@ -111,7 +109,6 @@ export function UserProfilePage() {
 
   return (
     <div>
-      {/* <Navbar onChatIconClick={() => {}} /> */} {/* <-- LINHA REMOVIDA */}
       <main style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
         <h2>Página de Perfil do Usuário</h2>
         {loading ? (

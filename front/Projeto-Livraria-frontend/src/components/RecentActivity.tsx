@@ -1,8 +1,6 @@
-import React from 'react'
-import { BsCheckCircle, BsChatText, BsEnvelope } from 'react-icons/bs'
-// CORRIGIDO: Este é o caminho correto para subir um nível (para 'src/')
-// e entrar na pasta 'styles/' (irmã de 'components/').
-import '../styles/Sidebar.css'
+import React from "react";
+import { BsCheckCircle, BsChatText, BsEnvelope } from "react-icons/bs";
+import "../styles/Sidebar.css";
 
 const RecentActivity: React.FC = () => {
   return (
@@ -30,7 +28,7 @@ const RecentActivity: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RecentActivity
+export default RecentActivity;

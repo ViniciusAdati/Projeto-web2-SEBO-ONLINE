@@ -28,7 +28,6 @@ function useOutsideAlerter(
 
 export function Navbar({ onChatIconClick }: NavbarProps) {
   const navigate = useNavigate();
-  // --- CORREÇÃO (TS2339): Pega 'markAsRead' ---
   const { user, logout, unreadCount, notifications, markAsRead } = useAuth();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -50,12 +49,10 @@ export function Navbar({ onChatIconClick }: NavbarProps) {
     { to: "/minha-estante", label: "Estante" },
   ];
 
-  // --- CORREÇÃO (TS2339): Usa 'user.nome' (com 'o') e 'user.avatarUrl' ---
   const userMock = {
     name: user?.nome || "Usuário",
     avatarUrl: user?.avatarUrl || "https://via.placeholder.com/40",
   };
-  // --- FIM DA CORREÇÃO ---
 
   const handleBellClick = () => {
     setIsNotificationPopupOpen((prev) => !prev);
@@ -89,15 +86,13 @@ export function Navbar({ onChatIconClick }: NavbarProps) {
               <span className="notification-badge">{unreadCount}</span>
             )}
 
-            {/* --- CORREÇÃO (TS2322): Passa 'markAsRead' para 'onMarkAsRead' --- */}
             {isNotificationPopupOpen && (
               <NotificationPopup
                 notifications={notifications}
                 onClose={() => setIsNotificationPopupOpen(false)}
-                onMarkAsRead={markAsRead} // Prop corrigida
+                onMarkAsRead={markAsRead}
               />
             )}
-            {/* --- FIM DA CORREÇÃO --- */}
           </div>
           <FaCommentDots
             className="action-icon"

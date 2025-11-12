@@ -3,15 +3,12 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { FaTimes, FaSearch, FaUserCircle } from "react-icons/fa";
 import "../styles/ChatSidebar.css";
-// A importação problemática de 'AuthUser' foi removida daqui
 import { useAuth } from "../hooks/useAuth";
 
-// Interface para dados da API /users/community
 interface CommunityUser {
   id: number;
   name: string;
   totalLivros: number;
-  // avatarUrl?: string;
 }
 
 interface ChatSidebarProps {
@@ -24,7 +21,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({ onClose }) => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { user: currentUser } = useAuth(); // currentUser vem do useAuth
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {

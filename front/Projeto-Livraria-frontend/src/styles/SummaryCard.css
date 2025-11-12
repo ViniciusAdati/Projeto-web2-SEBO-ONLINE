@@ -1,5 +1,3 @@
-/* src/styles/SummaryCard.css */
-
 .summary-card {
   background-color: #fff;
   border: 1px solid #e9ecef;
@@ -32,7 +30,7 @@
 
 .card-icon {
   font-size: 1.5em;
-  color: #007bff; /* Cor principal, ajuste se quiser cores diferentes para cada card */
+  color: #007bff;
 }
 
 .card-value {

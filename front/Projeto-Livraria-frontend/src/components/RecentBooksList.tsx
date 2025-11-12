@@ -1,5 +1,3 @@
-// src/components/RecentBooksList.tsx
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -76,7 +74,7 @@ export function RecentBooksList() {
           <div
             key={book.inventario_id}
             className="book-card"
-            onClick={() => handleBookClick(book)} // ✅ apenas 1 argumento
+            onClick={() => handleBookClick(book)}
             style={{ cursor: "pointer" }}
           >
             <div className="book-card-image">

@@ -1,17 +1,9 @@
-/* ==================================== */
-/* ESTILOS GERAIS DA SIDEBAR (Blocos)   */
-/* ==================================== */
-
 .sidebar-block h3 {
   font-size: 1.2em;
   font-weight: 700;
   margin-bottom: 1rem;
   color: #333;
 }
-
-/* ==================================== */
-/* QUICK ACTIONS (Ações Rápidas)        */
-/* ==================================== */
 
 .quick-actions .action-button {
   display: flex;
@@ -60,10 +52,6 @@
   background-color: #f8f9fa;
 }
 
-/* ==================================== */
-/* RECENT ACTIVITY (Atividade Recente)  */
-/* ==================================== */
-
 .activity-item {
   display: flex;
   align-items: flex-start;
@@ -105,10 +93,6 @@
 .activity-item.warning svg {
   color: #ffc107;
 }
-
-/* ==================================== */
-/* TOP TRADERS (Top Traders)            */
-/* ==================================== */
 
 .trader-item {
   display: flex;

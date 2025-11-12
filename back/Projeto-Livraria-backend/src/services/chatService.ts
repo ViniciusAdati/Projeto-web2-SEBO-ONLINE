@@ -1,13 +1,9 @@
 import { pool } from "../config/database";
-// Adiciona PoolConnection à importação
 import { RowDataPacket, PoolConnection } from "mysql2/promise";
-// ^^^ Note: usamos 'mysql2/promise' pois estamos usando await/async com o pool
-// Interface para a busca de participantes
 interface ParticipantRow extends RowDataPacket {
   usuario_id: number;
 }
 
-// Interface para a busca de negociação (mantida)
 interface NegociacaoRow extends RowDataPacket {
   id: number;
   negociacao_id: number;
@@ -17,13 +13,11 @@ export const findOrCreateNegociacao = async (
   userId1: number,
   userId2: number
 ): Promise<number> => {
-  let connection: PoolConnection | null = null; // Declare connection outside try
-  let transactionStarted = false; // Flag to track transaction
+  let connection: PoolConnection | null = null;
+  let transactionStarted = false;
 
   try {
-    connection = await pool.getConnection(); // Get connection
-
-    // SELECT outside transaction
+    connection = await pool.getConnection();
     const sqlFind = `
       SELECT np1.negociacao_id 
       FROM negociacao_participantes np1 
@@ -39,14 +33,13 @@ export const findOrCreateNegociacao = async (
     ]);
 
     if (rows.length > 0) {
-      connection.release(); // Release connection
-      connection = null; // Mark as released
+      connection.release();
+      connection = null;
       return rows[0].negociacao_id;
     }
 
-    // --- Start Transaction ONLY if creating ---
     await connection.beginTransaction();
-    transactionStarted = true; // Set flag
+    transactionStarted = true;
 
     const [negResult]: any = await connection.execute(
       "INSERT INTO negociacoes (status) VALUES (?)",
@@ -63,15 +56,14 @@ export const findOrCreateNegociacao = async (
       [negociacaoId, userId2]
     );
 
-    await connection.commit(); // Commit transaction
-    transactionStarted = false; // Reset flag after commit
+    await connection.commit();
+    transactionStarted = false;
 
     console.log(
       `[ChatService] Negociação (ID: ${negociacaoId}) criada entre usuários ${userId1} e ${userId2}`
     );
     return negociacaoId;
   } catch (error) {
-    // --- Rollback only if transaction was started ---
     if (connection && transactionStarted) {
       console.log("[ChatService] Rollback transaction due to error.");
       await connection.rollback();
@@ -79,20 +71,17 @@ export const findOrCreateNegociacao = async (
     console.error("[ChatService] Erro ao buscar/criar negociação:", error);
     throw new Error("Falha ao iniciar chat.");
   } finally {
-    // --- Release connection if it still exists ---
     if (connection) {
       connection.release();
     }
   }
 };
 
-// Função saveMessage (mantida, nome da tabela corrigido)
 export const saveMessage = async (
   negociacaoId: number,
   remetenteId: number,
   conteudo: string
 ): Promise<number> => {
-  // Modificado para retornar o ID da mensagem salva
   try {
     const sql = `
       INSERT INTO mensagens (negociacao_id, remetente_id, conteudo) 
@@ -106,14 +95,13 @@ export const saveMessage = async (
     console.log(
       `[ChatService] Mensagem salva (ID: ${result.insertId}) para negociação (ID: ${negociacaoId})`
     );
-    return result.insertId; // Retorna o ID da nova mensagem
+    return result.insertId;
   } catch (error) {
     console.error("[ChatService] Erro ao salvar mensagem:", error);
     throw new Error("Falha ao salvar mensagem.");
   }
 };
 
-// Função getMessageHistory (mantida, nomes das tabelas corrigidos)
 export const getMessageHistory = async (negociacaoId: number) => {
   try {
     const sql = `
@@ -134,8 +122,6 @@ export const getMessageHistory = async (negociacaoId: number) => {
   }
 };
 
-// --- NOVA FUNÇÃO HELPER ---
-// Busca o ID do outro participante em uma negociação
 export const getOtherParticipantId = async (
   negociacaoId: number,
   remetenteId: number
@@ -146,7 +132,7 @@ export const getOtherParticipantId = async (
             FROM negociacao_participantes 
             WHERE negociacao_id = ? AND usuario_id != ? 
             LIMIT 1; 
-        `; // Tabelas minúsculas
+        `;
     const [rows] = await pool.execute<ParticipantRow[]>(sql, [
       negociacaoId,
       remetenteId,
@@ -155,14 +141,12 @@ export const getOtherParticipantId = async (
     if (rows.length > 0) {
       return rows[0].usuario_id;
     }
-    return null; // Não encontrou outro participante (estranho, mas possível)
+    return null;
   } catch (error) {
     console.error(
       "[ChatService:getOtherParticipantId] Erro ao buscar outro participante:",
       error
     );
-    // Não lançar erro aqui, apenas retornar null para não quebrar o fluxo de notificação
     return null;
   }
 };
-// --- FIM DA NOVA FUNÇÃO ---

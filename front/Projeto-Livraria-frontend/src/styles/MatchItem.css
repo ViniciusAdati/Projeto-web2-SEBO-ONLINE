@@ -1,5 +1,3 @@
-/* src/styles/MatchItem.css */
-
 .match-item-card {
   border: 1px solid #e9ecef;
   border-radius: 8px;
@@ -62,7 +60,6 @@
   color: #ffc107;
 }
 
-/* Porcentagem de Match (Canto Superior Direito) */
 .match-percentage {
   position: absolute;
   top: 0;
@@ -74,10 +71,9 @@
   color: white;
 }
 
-/* Detalhes do Livro (Parte Inferior) */
 .book-details {
   display: grid;
-  grid-template-columns: 1fr 1fr auto; /* Oferece, Quer, Botão */
+  grid-template-columns: 1fr 1fr auto;
   gap: 1.5rem;
   padding-top: 1rem;
   align-items: center;
@@ -90,7 +86,7 @@
 }
 
 .book-want {
-  border-right: none; /* Remove a borda da última coluna de detalhes */
+  border-right: none;
   padding-right: 0;
   padding-left: 1.5rem;
   border-left: 1px solid #f0f0f0;
@@ -124,9 +120,8 @@
   font-size: 0.95em;
 }
 
-/* Botão de Iniciar Troca */
 .init-trade-button {
-  background-color: #28a745; /* Verde */
+  background-color: #28a745;
   color: white;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
@@ -134,8 +129,8 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s;
-  white-space: nowrap; /* Impede a quebra de linha */
-  align-self: center; /* Alinha o botão verticalmente ao centro */
+  white-space: nowrap;
+  align-self: center;
 }
 
 .init-trade-button:hover {

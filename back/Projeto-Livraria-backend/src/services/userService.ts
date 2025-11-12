@@ -1,7 +1,6 @@
 import { pool } from "../config/database";
-import { RowDataPacket } from "mysql2"; // Import necessário para tipagem
+import { RowDataPacket } from "mysql2";
 
-// Função existente - CORRIGIDA (nome da tabela)
 export const getAllUsersPublic = async () => {
   try {
     const sql = `
@@ -20,7 +19,6 @@ export const getAllUsersPublic = async () => {
   }
 };
 
-// Função existente - CORRIGIDA (nome da tabela)
 export const getUserByIdPublic = async (userId: number) => {
   try {
     const sql = `
@@ -28,7 +26,7 @@ export const getUserByIdPublic = async (userId: number) => {
       FROM usuarios -- Corrigido para minúsculo
       WHERE id = ?;
     `;
-    const [rows] = await pool.execute<RowDataPacket[]>(sql, [userId]); // Tipagem adicionada
+    const [rows] = await pool.execute<RowDataPacket[]>(sql, [userId]);
     if (rows.length === 0) {
       throw new Error("Usuário não encontrado.");
     }
@@ -42,10 +40,8 @@ export const getUserByIdPublic = async (userId: number) => {
   }
 };
 
-// --- FUNÇÃO getAllCommunityUsers MODIFICADA ---
 export const getAllCommunityUsers = async () => {
   try {
-    // Query que busca usuários e CONTA quantos itens cada um tem no inventário
     const sql = `
       SELECT 
         u.id, 
@@ -61,13 +57,10 @@ export const getAllCommunityUsers = async () => {
     `;
     const [rows] = await pool.execute<RowDataPacket[]>(sql);
 
-    // Mapeia para o formato final
     return rows.map((user) => ({
       id: user.id,
-      name: user.nome, // Mapeado para 'name'
-      // avatarUrl: user.avatarUrl || '/default-avatar.png', // Exemplo
-      totalLivros: user.total_livros, // Passa a contagem de livros
-      // membroDesde: user.data_cadastro // Pode manter se quiser
+      name: user.nome,
+      totalLivros: user.total_livros,
     }));
   } catch (error) {
     console.error(
@@ -77,4 +70,3 @@ export const getAllCommunityUsers = async () => {
     throw new Error("Falha ao buscar usuários da comunidade.");
   }
 };
-// --- FIM DA FUNÇÃO MODIFICADA ---

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/NotificationPopup.css";
-// --- CORREÇÃO: Importa 'type { Notification }' do AuthContext ---
 import type { Notification } from "../contexts/AuthContext";
 
 interface NotificationPopupProps {
@@ -20,7 +19,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({
   useEffect(() => {
     if (notifications.length > 0) {
       const timer = setTimeout(() => {
-        onMarkAsRead(); // Zera o contador do badge
+        onMarkAsRead();
       }, 500);
       return () => clearTimeout(timer);
     }
@@ -56,7 +55,6 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({
         {notifications.length === 0 && (
           <li className="no-notifications">Nenhuma notificação nova.</li>
         )}
-        {/* --- CORREÇÃO (TS2339): Propriedades agora existem --- */}
         {notifications.map((notif) => (
           <li
             key={notif.id}

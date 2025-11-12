@@ -12,12 +12,10 @@ export const register = async (
   const senhaHash = await bcrypt.hash(senhaPlana, salt);
 
   try {
-    // --- CORREÇÃO AQUI ---
     const [result] = await pool.execute(
-      "INSERT INTO usuarios (nome, email, senha_hash) VALUES (?, ?, ?)", // Mudado para minúsculo
+      "INSERT INTO usuarios (nome, email, senha_hash) VALUES (?, ?, ?)",
       [nome, email, senhaHash]
     );
-    // --- FIM DA CORREÇÃO ---
     return { success: true, userId: (result as any).insertId };
   } catch (error: any) {
     if (error.code === "ER_DUP_ENTRY") {
@@ -28,12 +26,10 @@ export const register = async (
 };
 
 export const login = async (email: string, senhaPlana: string) => {
-  // --- CORREÇÃO AQUI ---
   const [rows] = await pool.execute<RowDataPacket[]>(
-    "SELECT * FROM usuarios WHERE email = ?", // Mudado para minúsculo
+    "SELECT * FROM usuarios WHERE email = ?",
     [email]
   );
-  // --- FIM DA CORREÇÃO ---
 
   if (rows.length === 0) {
     throw new Error("Email ou senha inválidos.");
@@ -47,7 +43,6 @@ export const login = async (email: string, senhaPlana: string) => {
     throw new Error("Email ou senha inválidos.");
   }
 
-  // IMPORTANTE: Mova sua chave secreta para variáveis de ambiente (.env)!
   const secretKey =
     process.env.JWT_SECRET ||
     "MINHA_CHAVE_SECRETA_SUPER_LONGA_E_ALEATORIA_PARA_O_PROJETO_WEB2";
@@ -60,7 +55,6 @@ export const login = async (email: string, senhaPlana: string) => {
     expiresIn: "8h",
   });
 
-  // Remova a senha hash antes de retornar o usuário
   delete usuario.senha_hash;
 
   return { usuario, token };
