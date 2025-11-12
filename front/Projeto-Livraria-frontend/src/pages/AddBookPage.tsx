@@ -2,21 +2,46 @@ import { useState } from "react";
 import { searchBooks } from "../services/googleBooksService";
 import { addBookToInventory } from "../services/inventoryService";
 import { toggleWishlist, getWishlist } from "../services/wishlistService";
-import BookCard from "../components/BookCard";
+import "../styles/AddBookPage.css";
+import "../styles/BookCard.css";
+
+type BookResult = {
+  id: string;
+  title: string;
+  author: string;
+  imageUrl: string;
+};
 
 export default function AddBookPage() {
   const [query, setQuery] = useState("");
-  const [books, setBooks] = useState<any[]>([]);
+  const [results, setResults] = useState<BookResult[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // 🔍 Busca os livros na API do Google
+  const handleSearch = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!query.trim()) return;
+
     setLoading(true);
+    setSearched(true);
+
     try {
       const data = await searchBooks(query);
-      setBooks(data);
+
+      const mapped = data.map((item: any) => ({
+        id: item.id,
+        title: item.volumeInfo?.title || "Título desconhecido",
+        author: item.volumeInfo?.authors?.[0] || "Autor desconhecido",
+        imageUrl:
+          item.volumeInfo?.imageLinks?.thumbnail ||
+          "https://via.placeholder.com/150x200?text=Sem+Imagem",
+      }));
+
+      setResults(mapped);
+
+      // Carrega a lista de favoritos
       const list = await getWishlist();
       const ids = Array.isArray(list)
         ? list.map((item: any) => String(item.googleBooksId || item.id))
@@ -29,8 +54,9 @@ export default function AddBookPage() {
     }
   };
 
-  const handleToggleFavorite = async (book: any) => {
-    await toggleWishlist(book);
+  // 💖 Favoritar ou desfavoritar livro
+  const handleToggleFavorite = async (book: BookResult) => {
+    await toggleWishlist(book.id);
     const list = await getWishlist();
     const ids = Array.isArray(list)
       ? list.map((item: any) => String(item.googleBooksId || item.id))
@@ -38,42 +64,96 @@ export default function AddBookPage() {
     setWishlist(ids);
   };
 
-  const handleAddBook = async (book: any) => {
+  // 📚 Adicionar à estante
+  const handleAddBookToShelf = async (book: BookResult) => {
     await addBookToInventory(book);
-    alert("Livro adicionado ao inventário!");
+    alert("Livro adicionado à estante!");
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <form onSubmit={handleSearch} className="flex mb-4">
-        <input
-          type="text"
-          placeholder="Pesquise um livro..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 border rounded-l-lg p-2"
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-r-lg"
+    <div className="addbook-container-wrapper">
+      <main className="addbook-container">
+        <h2>Adicionar Novo Livro/HQ</h2>
+        <p>Busque pelo título ou ISBN para adicionar um item à sua estante.</p>
+
+        {/* --- FORM DE BUSCA --- */}
+        <form
+          onSubmit={handleSearch}
+          className="addbook-search-form flex flex-col md:flex-row items-center gap-3"
         >
-          Buscar
-        </button>
-      </form>
-
-      {loading && <p>Carregando...</p>}
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {books.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            isFavorited={wishlist.includes(String(book.id))}
-            onToggleFavorite={() => handleToggleFavorite(book)}
-            onAddBook={() => handleAddBook(book)}
+          <input
+            type="text"
+            placeholder="Digite o título ou ISBN..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 border rounded-lg p-2 w-full md:w-auto"
           />
-        ))}
-      </div>
+
+          {/* ✅ margin-top aplicada em telas pequenas */}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-3 md:mt-0 hover:bg-blue-600 transition"
+          >
+            Buscar
+          </button>
+        </form>
+
+        <hr className="my-4" />
+
+        {/* --- RESULTADOS --- */}
+        <div className="results-container">
+          {loading && (
+            <p className="results-message">Carregando resultados...</p>
+          )}
+          {!loading && searched && results.length === 0 && (
+            <p className="results-message">
+              Nenhum resultado encontrado para "{query}".
+            </p>
+          )}
+
+          <div className="addbook-results-grid">
+            {results.map((book) => (
+              <div key={book.id} className="book-card">
+                <div className="book-card-image relative">
+                  <img src={book.imageUrl} alt={book.title} />
+
+                  {/* ❤️ BOTÃO FAVORITAR */}
+                  <button
+                    type="button"
+                    className={`favorite-btn ${
+                      wishlist.includes(book.id) ? "favorited" : ""
+                    }`}
+                    onClick={() => handleToggleFavorite(book)}
+                    title={
+                      wishlist.includes(book.id)
+                        ? "Remover dos favoritos"
+                        : "Adicionar aos favoritos"
+                    }
+                  >
+                    {wishlist.includes(book.id) ? "❤️" : "🤍"}
+                  </button>
+                </div>
+
+                <div className="book-card-content">
+                  <h3 className="book-card-title">{book.title}</h3>
+                  <p className="book-card-author">{book.author}</p>
+                  <div className="book-card-price">
+                    <span className="new-price">R$ ??.??</span>
+                  </div>
+                  <span className="installments">Via Google Books</span>
+                </div>
+
+                <button
+                  className="auth-button"
+                  onClick={() => handleAddBookToShelf(book)}
+                >
+                  Adicionar à Estante
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
