@@ -1,14 +1,11 @@
-// src/pages/AddBookPage.tsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { Navbar } from "../components/Navbar"; // <-- REMOVIDO
 import { searchBooks } from "../services/googleBooksService";
+import { useAuth } from "../hooks/useAuth";
+import { FaHeart } from "react-icons/fa"; // Importa o coração
 
-// --- CSS CORRIGIDO ---
-import "../styles/AddBookPage.css"; // Para o formulário de busca
-import "../styles/BookCard.css"; // Para os cards "bonitinhos"
-// --- FIM CSS ---
+import "../styles/AddBookPage.css";
+import "../styles/BookCard.css";
 
 type BookResult = {
   id: string;
@@ -23,6 +20,7 @@ export function AddBookPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -56,10 +54,13 @@ export function AddBookPage() {
     navigate("/livros/confirmar-detalhes", { state: { book: book } });
   };
 
+  const handleFavoriteClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    alert("Para favoritar este livro, primeiro adicione ele à sua Estante!");
+  };
+
   return (
     <div>
-      {/* <Navbar ... /> <-- REMOVIDO */}
-
       <main className="addbook-container">
         <h2>Adicionar Novo Livro/HQ</h2>
         <p>Busque pelo título ou ISBN para adicionar um item à sua estante.</p>
@@ -94,26 +95,31 @@ export function AddBookPage() {
             </p>
           )}
 
-          {/* --- ESTRUTURA "BONITINHA" APLICADA --- */}
           <div className="addbook-results-grid">
             {results.map((book) => (
               <div key={book.id} className="book-card">
+                {/* --- BOTÃO DE CORAÇÃO --- */}
+                <button
+                  className="wishlist-heart-btn"
+                  onClick={handleFavoriteClick}
+                  title="Adicionar aos favoritos"
+                >
+                  <FaHeart />
+                </button>
+                {/* ------------------------ */}
+
                 <div className="book-card-image">
                   <img src={book.imageUrl} alt={book.title} />
-                  {/* Tag mocada (opcional) */}
                   <span className="book-card-tag Novo">Novo</span>
                 </div>
-                {/* Wrapper de conteúdo para alinhamento correto */}
                 <div className="book-card-content">
                   <h3 className="book-card-title">{book.title}</h3>
                   <p className="book-card-author">{book.author}</p>
                   <div className="book-card-price">
-                    {/* Preço Mocado (pois API do Google não tem) */}
                     <span className="new-price">R$ ??.??</span>
                   </div>
                   <span className="installments">Via Google Books</span>
                 </div>
-                {/* Botão de Adicionar (estilizado pelo BookCard.css) */}
                 <button
                   className="auth-button"
                   onClick={() => handleAddBookToShelf(book)}
